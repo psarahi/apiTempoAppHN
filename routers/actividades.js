@@ -36,9 +36,16 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 
 // Funcion get por _id unico
 router.get('/:_id', async(req, res) => {
-    const actividad = await Actividades.findById(req.params._id);
-    if (!actividad) return res.status(404).send('No se encontro ningun documento');
-    res.send(actividad);
+    try {
+        const actividad = await Actividades.findById(req.params._id);
+        res.send(actividad);
+    } catch (error) {
+        res.status(404).send('No se encontro ningun documento');
+    }
+    // if (!actividad) {
+    //     return 
+    // } else {
+    // }
 });
 
 // Funcion POST
