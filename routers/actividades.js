@@ -40,7 +40,7 @@ router.get('/:_id', async(req, res) => {
         const actividad = await Actividades.findById(req.params._id);
         res.send(actividad);
     } catch (error) {
-        res.status(404).send('No se encontro ningun documento');
+        res.status(404).send('<h2>No se encontro ningun documento</h2>');
     }
     // if (!actividad) {
     //     return 
