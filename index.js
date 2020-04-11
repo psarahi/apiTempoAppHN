@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+const inicio = require('./routers/inicio');
 const actividades = require('./routers/actividades');
 const cuenta = require('./routers/cuentas');
 const miembros = require('./routers/miembros');
@@ -10,6 +11,7 @@ const programacionProyecto = require('./routers/programacionProyecto');
 const proyecto = require('./routers/proyecto');
 
 app.use(express.json());
+app.use('', inicio);
 app.use('/api/actividades', actividades);
 app.use('/api/cuentas', cuenta);
 app.use('/api/miembros', miembros);
