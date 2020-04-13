@@ -11,7 +11,7 @@ router.get('/', async(req, res) => {
         res.send(cuentas);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -24,7 +24,7 @@ router.get('/activo', async(req, res) => {
         res.send(cuentas);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -36,7 +36,7 @@ router.get('/:_id', async(req, res) => {
         res.send(cuenta);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -59,7 +59,7 @@ router.post('/', async(req, res) => {
         res.status(201).send(result);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -83,7 +83,7 @@ router.put('/:_id', async(req, res) => {
         res.status(204).send();
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -96,10 +96,13 @@ router.delete('/:_id', async(req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 
 });
+
+
+//////////////////////////// Rutas transacciones //////////////////////////
 
 module.exports = router;

@@ -10,7 +10,7 @@ router.get('/', async(req, res) => {
         res.send(miembros);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -22,7 +22,7 @@ router.get('/activo', async(req, res) => {
         res.send(miembros);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -34,7 +34,7 @@ router.get('/cuenta/:cuentas', async(req, res) => {
         res.send(miembros);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -46,7 +46,7 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
         res.send(miembros);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -58,7 +58,7 @@ router.get('/:_id', async(req, res) => {
         res.send(miembro);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -82,7 +82,7 @@ router.post('/', async(req, res) => {
         res.status(201).send(result);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -107,7 +107,7 @@ router.put('/:_id', async(req, res) => {
         res.status(204).send();
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -120,7 +120,7 @@ router.delete('/:_id', async(req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });

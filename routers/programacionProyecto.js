@@ -11,7 +11,7 @@ router.get('/', async(req, res) => {
         res.send(programacionProyectos);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -24,7 +24,7 @@ router.get('/activo', async(req, res) => {
         res.send(programacionProyectos);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -37,7 +37,7 @@ router.get('/cuenta/:cuentas/:proyectos', async(req, res) => {
         res.send(programacionProyectos);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -56,7 +56,7 @@ router.get('/activoCuenta/:cuentas/:proyectos', async(req, res) => {
         res.send(programacionProyectos);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -69,7 +69,7 @@ router.get('/:_id', async(req, res) => {
         res.send(programacionProyecto);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -91,7 +91,7 @@ router.post('/', async(req, res) => {
         res.status(201).send(result);
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 
@@ -115,7 +115,7 @@ router.put('/:_id', async(req, res) => {
         res.status(204).send();
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
@@ -127,7 +127,7 @@ router.delete('/:_id', async(req, res) => {
         res.status(200).send('Programacion de Proyecto borrada');
     } catch (error) {
         console.log(error);
-        res.status(404).send('no se encontro ningun documento');
+        res.status(404).send('No se encontro ningun documento');
 
     }
 });
