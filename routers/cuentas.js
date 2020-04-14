@@ -105,4 +105,5 @@ router.delete('/:_id', async(req, res) => {
 
 //////////////////////////// Rutas transacciones //////////////////////////
 
+
 module.exports = router;
