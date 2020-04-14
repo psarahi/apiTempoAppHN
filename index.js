@@ -7,18 +7,18 @@ const cuenta = require('./routers/cuentas');
 const miembros = require('./routers/miembros');
 const perfil = require('./routers/perfil');
 const programacionEquipos = require('./routers/programacionEquipos');
-const programacionProyecto = require('./routers/programacionProyecto');
-const proyecto = require('./routers/proyecto');
+const programacionProyectos = require('./routers/programacionProyecto');
+const proyectos = require('./routers/proyecto');
 
 app.use(express.json());
 app.use('', inicio);
 app.use('/api/actividades', actividades);
 app.use('/api/cuentas', cuenta);
 app.use('/api/miembros', miembros);
-app.use('/api/perfil', perfil);
+app.use('/api/perfiles', perfil);
 app.use('/api/programacionEquipos', programacionEquipos);
-app.use('/api/programacionProyecto', programacionProyecto);
-app.use('/api/proyecto', proyecto);
+app.use('/api/programacionProyectos', programacionProyectos);
+app.use('/api/proyectos', proyectos);
 
 const port = process.env.PORT || 3003;
 app.listen(port, () => console.log('Escuchando Puerto: ' + port));
