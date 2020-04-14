@@ -6,7 +6,8 @@ const { check, validationResult } = require('express-validator');
 // Funcion get todos
 router.get('/', async(req, res) => {
     try {
-        const miembros = await Miembros.find();
+        const miembros = await Miembros.find()
+            .populate('perfiles', 'nombre');
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -18,7 +19,8 @@ router.get('/', async(req, res) => {
 // Funcion get documentos activos
 router.get('/activo', async(req, res) => {
     try {
-        const miembros = await Miembros.find({ estado: true });
+        const miembros = await Miembros.find({ estado: true })
+            .populate('perfiles', 'nombre');
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -30,7 +32,8 @@ router.get('/activo', async(req, res) => {
 // Funcion get segun la cuenta TODOS
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
-        const miembros = await Miembros.find({ cuentas: { $eq: req.params.cuentas } });
+        const miembros = await Miembros.find({ cuentas: { $eq: req.params.cuentas } })
+            .populate('perfiles', 'nombre');
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -42,7 +45,13 @@ router.get('/cuenta/:cuentas', async(req, res) => {
 // Funcion get segun la cuenta ACTIVOS
 router.get('/activoCuenta/:cuentas', async(req, res) => {
     try {
-        const miembros = await Miembros.find({ $and: [{ cuentas: { $eq: req.params.cuentas } }, { estado: true }] });
+        const miembros = await Miembros.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: true }
+                ]
+            })
+            .populate('perfiles', 'nombre');
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -54,7 +63,8 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 // Funcion get por _id unico
 router.get('/:_id', async(req, res) => {
     try {
-        const miembro = await Miembros.findById(req.params._id);
+        const miembro = await Miembros.findById(req.params._id)
+            .populate('perfiles', 'nombre');;
         res.send(miembro);
     } catch (error) {
         console.log(error);

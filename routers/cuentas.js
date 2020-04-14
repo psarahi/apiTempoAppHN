@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 router.get('/', async(req, res) => {
     try {
         const cuentas = await Cuenta.find()
+            .populate('perfiles', 'nombre')
             .sort({ fechaRegistro: -1 });
         res.send(cuentas);
     } catch (error) {
