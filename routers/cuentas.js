@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const Cuenta = require('../modelos/cuentasModel');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
@@ -45,12 +46,23 @@ router.get('/:_id', async(req, res) => {
 // Funcion POST
 router.post('/', async(req, res) => {
     try {
+        let usuario = await Cuenta.findOne({
+            $or: [
+                { usuario: req.body.usuario },
+                { correo: req.body.correo }
+            ]
+        });
+        if (usuario) return res.status(400).send('Usurio ya existe');
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
         const cuenta = new Cuenta({
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             correo: req.body.correo,
             usuario: req.body.usuario,
-            password: req.body.password,
+            password: hashPassword,
             empresa: req.body.empresa,
             lugar: req.body.lugar,
             perfiles: req.body.perfiles,
@@ -68,12 +80,23 @@ router.post('/', async(req, res) => {
 // Funcion PUT
 router.put('/:_id', async(req, res) => {
     try {
+        // let usuario = await Cuenta.findOne({
+        //     $or: [
+        //         { usuario: req.body.usuario },
+        //         { correo: req.body.correo }
+        //     ]
+        // });
+        // if (usuario) return res.status(400).send('Usurio ya existe');
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
         const cuenta = await Cuenta.findByIdAndUpdate(req.params._id, {
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             correo: req.body.correo,
             usuario: req.body.usuario,
-            password: req.body.password,
+            password: hashPassword,
             empresa: req.body.empresa,
             lugar: req.body.lugar,
             perfiles: req.body.perfiles,

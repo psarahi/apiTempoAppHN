@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const Miembros = require('../modelos/miembrosModel');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
@@ -64,7 +65,7 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 router.get('/:_id', async(req, res) => {
     try {
         const miembro = await Miembros.findById(req.params._id)
-            .populate('perfiles', 'nombre');;
+            .populate('perfiles', 'nombre');
         res.send(miembro);
     } catch (error) {
         console.log(error);
@@ -76,12 +77,24 @@ router.get('/:_id', async(req, res) => {
 // Funcion POST
 router.post('/', async(req, res) => {
     try {
+
+        let usuario = await Miembros.findOne({
+            $or: [
+                { usuario: req.body.usuario },
+                { correo: req.body.correo }
+            ]
+        });
+        if (usuario) return res.status(400).send('Usurio ya existe');
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
         const miembro = new Miembros({
             cuentas: req.body.cuentas,
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             usuario: req.body.usuario,
-            password: req.body.password,
+            password: hashPassword,
             correo: req.body.correo,
             costoHr: req.body.costoHr,
             perfiles: req.body.perfiles,
@@ -100,12 +113,32 @@ router.post('/', async(req, res) => {
 // Funcion PUT
 router.put('/:_id', async(req, res) => {
     try {
+        // let usuario = await Miembros.findById(req.params._id)
+        //     .select({
+        //         $or: [
+        //             { usuario: req.body.usuario },
+        //             { correo: req.body.correo }
+        //         ]
+        //     });
+
+        // ({
+        //     $or: [
+        //         { usuario: req.body.usuario },
+        //         { correo: req.body.correo }
+        //     ]
+        // }, { _id: { $ne: req.params._id } });
+
+        // if (usuario) return res.status(400).send('Usurio ya existe');
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
         const miembro = await Miembros.findByIdAndUpdate(req.params._id, {
             cuentas: req.body.cuentas,
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             usuario: req.body.usuario,
-            password: req.body.password,
+            password: hashPassword,
             correo: req.body.correo,
             costoHr: req.body.costoHr,
             perfiles: req.body.perfiles,
