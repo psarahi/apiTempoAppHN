@@ -62,7 +62,6 @@ router.get('/:_id', async(req, res) => {
         const proyecto = await Proyecto.findById(req.params._id)
             .populate('miembros', 'empresa nombre apellido expertis');
 
-        if (!proyecto) return res.status(404).send('No se encontro ningun documento');
         res.send(proyecto);
     } catch (error) {
         console.log(error);
@@ -85,11 +84,14 @@ router.post('/', async(req, res) => {
             presupuestoRealPro: req.body.presupuestoRealPro,
             estado: req.body.estado
         });
-        const result = await proyecto.save();
-        res.status(201).send(result);
+        const saveRegistro = await proyecto.save();
+        const resultSave = await Proyecto.findById(saveRegistro.id)
+            .populate('miembros', 'empresa nombre apellido expertis');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
-        res.status(404).send('No se encontro ningun documento');
+        res.status(404).send('No se pudo registrar el documento');
 
     }
 });

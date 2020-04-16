@@ -72,7 +72,7 @@ router.post('/', async(req, res) => {
         res.status(201).send(result);
     } catch (error) {
         console.log(error);
-        res.status(404).send('No se encontro ningun documento');
+        res.status(404).send('No se pudo registrar el documento');
 
     }
 });
