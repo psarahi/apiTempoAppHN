@@ -7,8 +7,7 @@ const { check, validationResult } = require('express-validator');
 // Funcion get todos
 router.get('/', async(req, res) => {
     try {
-        const actividades = await Actividades.find()
-            .populate('cuentas', 'empresa lugar');
+        const actividades = await Actividades.find();
         res.send(actividades);
 
     } catch (error) {
