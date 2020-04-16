@@ -87,8 +87,11 @@ router.post('/', async(req, res) => {
             presupuestoReal: req.body.presupuestoReal,
             estado: req.body.estado
         });
-        const result = await programacionProyecto.save();
-        res.status(201).send(result);
+        const saveRegistro = await programacionProyecto.save();
+        const resultSave = await ProgramacionProyecto.findById(saveRegistro.id)
+            .populate('actividades', 'nombre');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');

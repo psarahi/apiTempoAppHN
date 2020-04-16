@@ -22,6 +22,7 @@ router.get('/', async(req, res) => {
 router.get('/activo', async(req, res) => {
     try {
         const cuentas = await Cuenta.find({ estado: true })
+            .populate('perfiles', 'nombre')
             .sort({ fechaRegistro: -1 });
         res.send(cuentas);
     } catch (error) {
@@ -34,7 +35,8 @@ router.get('/activo', async(req, res) => {
 // Funcion get por _id unico
 router.get('/:_id', async(req, res) => {
     try {
-        const cuenta = await Cuenta.findById(req.params._id);
+        const cuenta = await Cuenta.findById(req.params._id)
+            .populate('perfiles', 'nombre');
         res.send(cuenta);
     } catch (error) {
         console.log(error);
@@ -68,8 +70,12 @@ router.post('/', async(req, res) => {
             perfiles: req.body.perfiles,
             estado: req.body.estado
         });
-        const result = await cuenta.save();
-        res.status(201).send(result);
+
+        const saveRegistro = await cuenta.save();
+        const resultSave = await Cuenta.findById(saveRegistro.id)
+            .populate('perfiles', 'nombre');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');

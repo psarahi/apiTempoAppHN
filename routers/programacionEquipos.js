@@ -52,6 +52,7 @@ router.get('/activoProgramacionProyecto/:programacionproyectos', async(req, res)
                 ]
             })
             .populate('miembros', 'nombre apellido costoHr');
+
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -81,8 +82,11 @@ router.post('/', async(req, res) => {
             miembros: req.body.miembros,
             estado: req.body.estado
         });
-        const result = await programacionEquipo.save();
-        res.status(201).send(result);
+        const saveRegistro = await programacionEquipo.save();
+        const resultSave = await ProgramacionEquipos.findById(saveRegistro.id)
+            .populate('miembros', 'nombre apellido costoHr');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');

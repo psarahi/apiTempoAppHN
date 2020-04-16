@@ -101,8 +101,11 @@ router.post('/', async(req, res) => {
             expertis: req.body.expertis,
             estado: req.body.estado
         });
-        const result = await miembro.save();
-        res.status(201).send(result);
+        const saveRegistro = await miembro.save();
+        const resultSave = await Miembros.findById(saveRegistro.id)
+            .populate('perfiles', 'nombre');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');
