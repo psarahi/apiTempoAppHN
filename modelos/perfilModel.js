@@ -9,6 +9,9 @@ const perfilSchema = new mongosee.Schema({
     estado: {
         type: Boolean,
         default: true
+    },
+    nivel: {
+        type: Number
     }
 
 });

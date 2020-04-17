@@ -27,6 +27,38 @@ router.get('/activo', async(req, res) => {
     }
 });
 
+// Funcion que devuelve los miembros de rango responsable para un proyecto
+router.get('/perfilProyecto', async(req, res) => {
+    try {
+        const perfiles = await Perfil.find({
+            $and: [
+                { nivel: { $in: [3, 2] } },
+                { estado: true }
+            ]
+        });
+        res.send(perfiles);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+
+    }
+});
+
+// Funcion que devuelve los perfiles para miembros 
+router.get('/perfilAsignable', async(req, res) => {
+    try {
+        const perfiles = await Perfil.find({
+            nivel: { $ne: 1 }
+        });
+
+        res.send(perfiles);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+
+    }
+});
+
 // Funcion get por _id unico
 router.get('/:_id', async(req, res) => {
     try {
@@ -44,7 +76,8 @@ router.post('/', async(req, res) => {
     try {
         const perfil = new Perfil({
             nombre: req.body.nombre,
-            estado: req.body.estado
+            estado: req.body.estado,
+            nivel: req.body.nivel
         });
         const result = await perfil.save();
         res.status(201).send(result);
@@ -60,7 +93,8 @@ router.put('/:_id', async(req, res) => {
     try {
         const perfil = await Perfil.findByIdAndUpdate(req.params._id, {
             nombre: req.body.nombre,
-            estado: req.body.estado
+            estado: req.body.estado,
+            nivel: req.body.nivel
         }, {
             new: true
         });
