@@ -62,11 +62,12 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 });
 
 // Funcion para miembros rango responsable para proyecto
-router.get('/miembrosResponsables', async(req, res) => {
+router.get('/miembrosResponsables/:cuentas', async(req, res) => {
     try {
         const miembros = await Miembros.find({
                 $and: [
                     { perfiles: { $in: ['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'] } },
+                    { cuentas: { $eq: req.params.cuentas } },
                     { estado: true }
                 ]
             })
