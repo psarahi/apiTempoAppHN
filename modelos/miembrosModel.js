@@ -18,6 +18,7 @@ const miembroSchema = new mongosee.Schema({
         type: String,
         trim: true,
         required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -28,6 +29,7 @@ const miembroSchema = new mongosee.Schema({
         type: String,
         trim: true,
         required: true,
+        unique: true
     },
     costoHr: {
         type: Number,

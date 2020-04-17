@@ -32,7 +32,12 @@ router.get('/activo', async(req, res) => {
 // Funcion get segun la cuenta y proyecto TODOS
 router.get('/cuenta/:cuentas/:proyectos', async(req, res) => {
     try {
-        const programacionProyectos = await ProgramacionProyecto.find({ $and: [{ cuentas: { $eq: req.params.cuentas } }, { proyectos: { $eq: req.params.proyectos } }] })
+        const programacionProyectos = await ProgramacionProyecto.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { proyectos: { $eq: req.params.proyectos } }
+                ]
+            })
             .populate('actividades', 'nombre');
         res.send(programacionProyectos);
     } catch (error) {

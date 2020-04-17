@@ -14,11 +14,13 @@ const cuentaSchema = new mongosee.Schema({
         type: String,
         trim: true,
         required: true,
+        unique: true
     },
     usuario: {
         type: String,
         trim: true,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
