@@ -1,4 +1,6 @@
 const mongosee = require('mongoose');
+const moment = require('moment');
+moment.locale('es');
 
 const proyectoSchema = new mongosee.Schema({
     cuentas: {
@@ -33,7 +35,7 @@ const proyectoSchema = new mongosee.Schema({
     },
     fechaRegistro: {
         type: Date,
-        default: Date.now
+        default: moment().subtract(6, 'hour').format("YYYY-MM-DD HH:mm:ss")
     },
     estado: {
         type: Boolean,

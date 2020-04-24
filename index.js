@@ -9,6 +9,7 @@ const perfil = require('./routers/perfil');
 const programacionEquipos = require('./routers/programacionEquipos');
 const programacionProyectos = require('./routers/programacionProyecto');
 const proyectos = require('./routers/proyecto');
+const detalleActividad = require('./routers/detalleActividad');
 const auth = require('./routers/autentificacion');
 
 app.use(express.json());
@@ -41,6 +42,7 @@ app.use('/api/perfiles', perfil);
 app.use('/api/programacionEquipos', programacionEquipos);
 app.use('/api/programacionProyectos', programacionProyectos);
 app.use('/api/proyectos', proyectos);
+app.use('/api/detalleActividad', detalleActividad);
 app.use('/api/auth', auth);
 
 

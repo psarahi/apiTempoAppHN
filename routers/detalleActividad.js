@@ -1,14 +1,18 @@
 const express = require('express');
-const Actividades = require('../modelos/actividadesModel');
+const DetalleActividad = require('../modelos/detalleActividadModel');
 // const Cuentas = require('../modelos/cuentasModel');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const moment = require('moment');
+moment.locale('es');
 
 // Funcion get todos
 router.get('/', async(req, res) => {
     try {
-        const actividades = await Actividades.find();
-        res.send(actividades);
+        const detalleActividades = await DetalleActividad.find()
+            .populate('programacionequipos');
+
+        res.send(detalleActividades);
 
     } catch (error) {
         console.log(error);
@@ -19,8 +23,10 @@ router.get('/', async(req, res) => {
 // Funcion get documentos activos
 router.get('/activo', async(req, res) => {
     try {
-        const actividades = await Actividades.find({ estado: true });
-        res.send(actividades);
+        const detalleActividades = await DetalleActividad.find({ estado: true })
+            .populate('programacionequipos');
+
+        res.send(detalleActividades);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
@@ -31,8 +37,10 @@ router.get('/activo', async(req, res) => {
 // Funcion get segun la cuenta TODOS
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
-        const actividad = await Actividades.find({ cuentas: { $eq: req.params.cuentas } });
-        res.send(actividad);
+        const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
+            .populate('programacionequipos');
+
+        res.send(detalleActividad);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
@@ -43,13 +51,15 @@ router.get('/cuenta/:cuentas', async(req, res) => {
 // Funcion get segun la cuenta ACTIVOS
 router.get('/activoCuenta/:cuentas', async(req, res) => {
     try {
-        const actividad = await Actividades.find({
-            $and: [
-                { cuentas: { $eq: req.params.cuentas } },
-                { estado: true }
-            ]
-        });
-        res.send(actividad);
+        const detalleActividad = await DetalleActividad.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: true }
+                ]
+            })
+            .populate('programacionequipos');
+
+        res.send(detalleActividad);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
@@ -60,8 +70,10 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 // Funcion get por _id unico
 router.get('/:_id', async(req, res) => {
     try {
-        const actividad = await Actividades.findById(req.params._id);
-        res.send(actividad);
+        const detalleActividad = await DetalleActividad.findById(req.params._id)
+            .populate('programacionequipos');
+
+        res.send(detalleActividad);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
@@ -71,14 +83,21 @@ router.get('/:_id', async(req, res) => {
 // Funcion POST
 router.post('/', async(req, res) => {
     try {
-        const actividad = new Actividades({
-            nombre: req.body.nombre,
+        const detalleActividad = new DetalleActividad({
             cuentas: req.body.cuentas,
+            programacionequipos: req.body.programacionequipos,
+            descripcion: req.body.descripcion,
+            inicio: req.body.inicio,
+            fin: req.body.fin,
+            costo: req.body.costo,
             estado: req.body.estado
         });
-        const result = await actividad.save();
-        res.status(201).send(result);
 
+        const saveRegistro = await detalleActividad.save();
+        const resultSave = await DetalleActividad.findById(saveRegistro.id)
+            .populate('programacionequipos');
+
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');
@@ -89,9 +108,13 @@ router.post('/', async(req, res) => {
 // Funcion PUT
 router.put('/:_id', async(req, res) => {
     try {
-        const actividad = await Actividades.findByIdAndUpdate(req.params._id, {
-            nombre: req.body.nombre,
+        const detalleActividad = await DetalleActividad.findByIdAndUpdate(req.params._id, {
             cuentas: req.body.cuentas,
+            programacionequipos: req.body.programacionequipos,
+            descripcion: req.body.descripcion,
+            inicio: req.body.inicio,
+            fin: req.body.fin,
+            costo: req.body.costo,
             estado: req.body.estado
         }, {
             new: true
@@ -107,7 +130,7 @@ router.put('/:_id', async(req, res) => {
 // Funcion DELETE
 router.delete('/:_id', async(req, res) => {
     try {
-        const actividad = await Actividades.findByIdAndDelete(req.params._id);
+        const detalleActividad = await DetalleActividad.findByIdAndDelete(req.params._id);
         res.status(200).send('Actividad borrada');
     } catch (error) {
         console.log(error);
@@ -118,9 +141,9 @@ router.delete('/:_id', async(req, res) => {
 
 // Rutas Joins
 // router.get('/join', async(req, res) => {
-//     const actividades = await Actividades.find()
+//     const detalleActividades = await DetalleActividad.find()
 //         .populate('cuentas', 'nombre apellido correo');
-//     res.send(actividades);
+//     res.send(detalleActividades);
 // });
 
 module.exports = router;

@@ -8,7 +8,8 @@ const { check, validationResult } = require('express-validator');
 router.get('/', async(req, res) => {
     try {
         const miembros = await Miembros.find()
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -21,7 +22,8 @@ router.get('/', async(req, res) => {
 router.get('/activo', async(req, res) => {
     try {
         const miembros = await Miembros.find({ estado: true })
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -34,7 +36,8 @@ router.get('/activo', async(req, res) => {
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
         const miembros = await Miembros.find({ cuentas: { $eq: req.params.cuentas } })
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -52,7 +55,8 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
                     { estado: true }
                 ]
             })
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -71,7 +75,8 @@ router.get('/miembrosResponsables/:cuentas', async(req, res) => {
                     { estado: true }
                 ]
             })
-            .populate('perfiles', 'nombre nivel');
+            .populate('perfiles', 'nombre nivel')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembros);
     } catch (error) {
         console.log(error);
@@ -84,7 +89,8 @@ router.get('/miembrosResponsables/:cuentas', async(req, res) => {
 router.get('/:_id', async(req, res) => {
     try {
         const miembro = await Miembros.findById(req.params._id)
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
         res.send(miembro);
     } catch (error) {
         console.log(error);
@@ -122,7 +128,8 @@ router.post('/', async(req, res) => {
         });
         const saveRegistro = await miembro.save();
         const resultSave = await Miembros.findById(saveRegistro.id)
-            .populate('perfiles', 'nombre');
+            .populate('perfiles', 'nombre')
+            .sort({ nombre: 1, apellido: 1 });
 
         res.status(201).send(resultSave);
     } catch (error) {
