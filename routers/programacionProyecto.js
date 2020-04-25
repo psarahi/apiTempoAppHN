@@ -47,6 +47,19 @@ router.get('/cuenta/:cuentas/:proyectos', async(req, res) => {
     }
 });
 
+// Funcion get segun la cuenta TODOS nombres de proyectos y actividades
+router.get('/detalles/:cuentas', async(req, res) => {
+    try {
+        const programacionProyectos = await ProgramacionProyecto.find({ cuentas: { $eq: req.params.cuentas } }, 'proyectos actividades cuentas')
+            .populate('actividades proyectos cuentas', 'nombre nombreProyecto empresa');
+        res.send(programacionProyectos);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+
+    }
+});
+
 // Funcion get segun la cuenta y proyecto ACTIVOS
 router.get('/activoCuenta/:cuentas/:proyectos', async(req, res) => {
     try {

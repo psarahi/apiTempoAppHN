@@ -12,7 +12,41 @@ router.get('/', async(req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
+    }
+});
 
+// Funcion detallado de programacion
+router.get('/detallado/:miembro', async(req, res) => {
+    try {
+        const programacionEquipos = await ProgramacionEquipos.find({ miembros: { $eq: req.params.miembro } })
+            .populate({
+                path: 'programacionproyecto',
+                populate: {
+                    path: 'proyectos',
+                    select: 'nombreProyecto',
+                    model: 'proyectos'
+                }
+            }).populate({
+                path: 'programacionproyecto',
+                populate: {
+                    path: 'actividades',
+                    select: 'nombre',
+                    model: 'actividades'
+                }
+            })
+            .populate({
+                path: 'programacionproyecto',
+                populate: {
+                    path: 'cuentas',
+                    select: 'empresa',
+                    model: 'cuentas'
+                }
+            })
+            .populate('miembros', 'nombre apellido costoHr');
+        res.send(programacionEquipos);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
     }
 });
 

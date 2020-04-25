@@ -1,9 +1,9 @@
 const mongosee = require('mongoose');
 
 const programacionEquiposSchema = new mongosee.Schema({
-    programacionproyectos: {
+    programacionproyecto: {
         type: mongosee.Schema.Types.ObjectId,
-        ref: 'programacionproyectos',
+        ref: 'programacionproyecto',
         required: true
     },
     miembros: {

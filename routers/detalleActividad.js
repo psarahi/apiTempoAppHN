@@ -48,6 +48,20 @@ router.get('/cuenta/:cuentas', async(req, res) => {
 
 });
 
+// Funcion get segun la cuenta y miembros TODOS
+router.get('/miembrosDetalle/:cuentas', async(req, res) => {
+    try {
+        const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
+            .populate('programacionequipos');
+
+        res.send(detalleActividad);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+    }
+
+});
+
 // Funcion get segun la cuenta ACTIVOS
 router.get('/activoCuenta/:cuentas', async(req, res) => {
     try {
