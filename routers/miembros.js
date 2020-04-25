@@ -90,7 +90,6 @@ router.get('/:_id', async(req, res) => {
     try {
         const miembro = await Miembros.findById(req.params._id)
             .populate('perfiles', 'nombre')
-            .sort({ nombre: 1, apellido: 1 });
         res.send(miembro);
     } catch (error) {
         console.log(error);
@@ -129,7 +128,6 @@ router.post('/', async(req, res) => {
         const saveRegistro = await miembro.save();
         const resultSave = await Miembros.findById(saveRegistro.id)
             .populate('perfiles', 'nombre')
-            .sort({ nombre: 1, apellido: 1 });
 
         res.status(201).send(resultSave);
     } catch (error) {

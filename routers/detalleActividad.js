@@ -10,7 +10,8 @@ moment.locale('es');
 router.get('/', async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find()
-            .populate('programacionequipos');
+            .populate('programacionequipos')
+            .sort({ inicio: -1 });
 
         res.send(detalleActividades);
 
@@ -24,7 +25,8 @@ router.get('/', async(req, res) => {
 router.get('/activo', async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find({ estado: true })
-            .populate('programacionequipos');
+            .populate('programacionequipos')
+            .sort({ inicio: -1 });
 
         res.send(detalleActividades);
     } catch (error) {
@@ -38,7 +40,8 @@ router.get('/activo', async(req, res) => {
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
-            .populate('programacionequipos');
+            .populate('programacionequipos')
+            .sort({ inicio: -1 });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -49,10 +52,11 @@ router.get('/cuenta/:cuentas', async(req, res) => {
 });
 
 // Funcion get segun la cuenta y miembros TODOS
-router.get('/miembrosDetalle/:cuentas', async(req, res) => {
+router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
-            .populate('programacionequipos');
+            .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
+            .sort({ inicio: -1 });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -60,6 +64,25 @@ router.get('/miembrosDetalle/:cuentas', async(req, res) => {
         res.status(404).send('No se encontro ningun documento');
     }
 
+});
+
+// Funcion get segun la cuenta y miembros ACTIVOS
+router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
+    try {
+        const detalleActividad = await DetalleActividad.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: true }
+                ]
+            })
+            .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
+            .sort({ inicio: -1 });
+
+        res.send(detalleActividad);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+    }
 });
 
 // Funcion get segun la cuenta ACTIVOS
@@ -71,7 +94,8 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
                     { estado: true }
                 ]
             })
-            .populate('programacionequipos');
+            .populate('programacionequipos')
+            .sort({ inicio: -1 });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -85,7 +109,7 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 router.get('/:_id', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.findById(req.params._id)
-            .populate('programacionequipos');
+            .populate('programacionequipos')
 
         res.send(detalleActividad);
     } catch (error) {
@@ -109,7 +133,7 @@ router.post('/', async(req, res) => {
 
         const saveRegistro = await detalleActividad.save();
         const resultSave = await DetalleActividad.findById(saveRegistro.id)
-            .populate('programacionequipos');
+            .populate('programacionequipos')
 
         res.status(201).send(resultSave);
     } catch (error) {

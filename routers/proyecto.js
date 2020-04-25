@@ -45,7 +45,12 @@ router.get('/cuenta/:cuentas', async(req, res) => {
 // Funcion get segun la cuenta ACTIVOS
 router.get('/activoCuenta/:cuentas', async(req, res) => {
     try {
-        const proyectos = await Proyecto.find({ $and: [{ cuentas: { $eq: req.params.cuentas } }, { estado: true }] })
+        const proyectos = await Proyecto.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: true }
+                ]
+            })
             .populate('miembros', 'empresa nombre apellido expertis');
 
         res.send(proyectos);
