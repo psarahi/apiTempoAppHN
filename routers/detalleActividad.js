@@ -11,6 +11,22 @@ router.get('/', async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find()
             .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            })
             .sort({ inicio: -1 });
 
         res.send(detalleActividades);
@@ -26,6 +42,22 @@ router.get('/activo', async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find({ estado: true })
             .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            })
             .sort({ inicio: -1 });
 
         res.send(detalleActividades);
@@ -41,6 +73,58 @@ router.get('/cuenta/:cuentas', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
             .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            })
+            .sort({ inicio: -1 });
+
+        res.send(detalleActividad);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+    }
+
+});
+
+// Funcion get segun la cuenta ACTIVOS
+router.get('/activoCuenta/:cuentas', async(req, res) => {
+    try {
+        const detalleActividad = await DetalleActividad.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: true }
+                ]
+            })
+            .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            })
             .sort({ inicio: -1 });
 
         res.send(detalleActividad);
@@ -56,6 +140,22 @@ router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
             .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            })
             .sort({ inicio: -1 });
 
         res.send(detalleActividad);
@@ -76,25 +176,22 @@ router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
                 ]
             })
             .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
-            .sort({ inicio: -1 });
-
-        res.send(detalleActividad);
-    } catch (error) {
-        console.log(error);
-        res.status(404).send('No se encontro ningun documento');
-    }
-});
-
-// Funcion get segun la cuenta ACTIVOS
-router.get('/activoCuenta/:cuentas', async(req, res) => {
-    try {
-        const detalleActividad = await DetalleActividad.find({
-                $and: [
-                    { cuentas: { $eq: req.params.cuentas } },
-                    { estado: true }
-                ]
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
             })
-            .populate('programacionequipos')
             .sort({ inicio: -1 });
 
         res.send(detalleActividad);
@@ -102,7 +199,6 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
     }
-
 });
 
 // Funcion get por _id unico
@@ -110,6 +206,22 @@ router.get('/:_id', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.findById(req.params._id)
             .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -134,6 +246,22 @@ router.post('/', async(req, res) => {
         const saveRegistro = await detalleActividad.save();
         const resultSave = await DetalleActividad.findById(saveRegistro.id)
             .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            });
 
         res.status(201).send(resultSave);
     } catch (error) {

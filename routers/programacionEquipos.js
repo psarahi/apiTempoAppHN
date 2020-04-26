@@ -21,26 +21,22 @@ router.get('/detallado/:miembro', async(req, res) => {
         const programacionEquipos = await ProgramacionEquipos.find({ miembros: { $eq: req.params.miembro } })
             .populate({
                 path: 'programacionproyecto',
-                populate: {
-                    path: 'proyectos',
-                    select: 'nombreProyecto',
-                    model: 'proyectos'
-                }
-            }).populate({
-                path: 'programacionproyecto',
-                populate: {
-                    path: 'actividades',
-                    select: 'nombre',
-                    model: 'actividades'
-                }
-            })
-            .populate({
-                path: 'programacionproyecto',
-                populate: {
-                    path: 'cuentas',
-                    select: 'empresa',
-                    model: 'cuentas'
-                }
+                populate: [{
+                        path: 'proyectos',
+                        select: 'nombreProyecto',
+                        model: 'proyectos'
+                    },
+                    {
+                        path: 'actividades',
+                        select: 'nombre',
+                        model: 'actividades'
+                    },
+                    {
+                        path: 'cuentas',
+                        select: 'empresa',
+                        model: 'cuentas'
+                    }
+                ]
             })
             .populate('miembros', 'nombre apellido costoHr');
         res.send(programacionEquipos);
