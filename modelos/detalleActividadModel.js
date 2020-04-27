@@ -29,6 +29,10 @@ const detalleActividadSchema = new mongosee.Schema({
         type: Number,
         required: true,
     },
+    fecha: {
+        type: Date,
+        default: moment().subtract(6, 'hour').format("YYYY-MM-DD HH:mm:ss")
+    },
     estado: {
         type: Boolean,
         default: true
