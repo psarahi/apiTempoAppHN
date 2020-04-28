@@ -42,6 +42,7 @@ router.post('/', async(req, res) => {
                 nombre: usuarioMiembro.nombre,
                 apellido: usuarioMiembro.apellido,
                 idCuenta: usuarioMiembro.cuentas,
+                fecha: usuarioMiembro.fecha,
                 perfil: usuarioMiembro.perfiles
             });
         }
@@ -53,6 +54,7 @@ router.post('/', async(req, res) => {
             nombre: usuarioCuenta.nombre,
             apellido: usuarioCuenta.apellido,
             idCuenta: usuarioCuenta._id,
+            fecha: usuarioCuenta.fechaRegistro,
             perfil: usuarioCuenta.perfiles
         });
     }

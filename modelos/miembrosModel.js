@@ -1,4 +1,6 @@
 const mongosee = require('mongoose');
+const moment = require('moment');
+moment.locale('es');
 
 const miembroSchema = new mongosee.Schema({
     cuentas: {
@@ -44,6 +46,10 @@ const miembroSchema = new mongosee.Schema({
     expertis: {
         type: [String],
         required: true,
+    },
+    fecha: {
+        type: Date,
+        default: moment().subtract(6, 'hour').format("YYYY-MM-DD HH:mm:ss")
     },
     estado: {
         type: Boolean,
