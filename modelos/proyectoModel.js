@@ -35,7 +35,7 @@ const proyectoSchema = new mongosee.Schema({
     },
     fechaRegistro: {
         type: Date,
-        default: moment().subtract(6, 'hour').format("YYYY-MM-DD HH:mm:ss")
+        default: moment().format("YYYY-MM-DD HH:mm:ss")
     },
     estado: {
         type: Boolean,
