@@ -16,6 +16,7 @@ const detalleActividadSchema = new mongosee.Schema({
     descripcion: {
         type: String,
         required: false,
+        maxlength: 200
     },
     inicio: {
         type: Date,

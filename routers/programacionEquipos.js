@@ -108,7 +108,7 @@ router.get('/:_id', async(req, res) => {
 router.post('/', async(req, res) => {
     try {
         const programacionEquipo = new ProgramacionEquipos({
-            programacionproyectos: req.body.programacionproyectos,
+            programacionproyecto: req.body.programacionproyecto,
             miembros: req.body.miembros,
             estado: req.body.estado
         });
@@ -128,7 +128,7 @@ router.post('/', async(req, res) => {
 router.put('/:_id', async(req, res) => {
     try {
         const programacionEquipo = await ProgramacionEquipos.findByIdAndUpdate(req.params._id, {
-            programacionproyectos: req.body.programacionproyectos,
+            programacionproyecto: req.body.programacionproyecto,
             miembros: req.body.miembros,
             estado: req.body.estado
         }, {
