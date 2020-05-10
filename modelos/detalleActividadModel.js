@@ -20,11 +20,11 @@ const detalleActividadSchema = new mongosee.Schema({
     },
     inicio: {
         type: Date,
-        default: moment().format("YYYY-MM-DD HH:mm:ss"),
+        default: Date.now(),
     },
     fin: {
         type: Date,
-        default: moment().format("YYYY-MM-DD HH:mm:ss")
+        default: Date.now()
     },
     costo: {
         type: Number,
@@ -32,7 +32,7 @@ const detalleActividadSchema = new mongosee.Schema({
     },
     fecha: {
         type: Date,
-        default: moment().format("YYYY-MM-DD HH:mm:ss")
+        default: Date.now()
     },
     estado: {
         type: Boolean,
