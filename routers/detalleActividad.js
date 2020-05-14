@@ -9,7 +9,7 @@ moment.locale('es');
 // Funcion get todos
 router.get('/', async(req, res) => {
     try {
-        const detalleActividades = await DetalleActividad.find()
+        const detalleActividades = await DetalleActividad.find({ estado: false })
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
@@ -71,7 +71,12 @@ router.get('/activo', async(req, res) => {
 // Funcion get segun la cuenta TODOS
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
-        const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
+        const detalleActividad = await DetalleActividad.find({
+                $and: [
+                    { cuentas: { $eq: req.params.cuentas } },
+                    { estado: false }
+                ]
+            })
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
