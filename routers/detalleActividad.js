@@ -290,7 +290,27 @@ router.put('/:_id', async(req, res) => {
         }, {
             new: true
         });
-        res.status(204).send();
+
+        const resultUpdate = await DetalleActividad.findById(detalleActividad._id)
+            .populate('programacionequipos')
+            .populate({
+                path: 'programacionequipos',
+                populate: {
+                    path: 'programacionproyecto',
+                    select: 'proyectos actividades',
+                    populate: [{
+                            path: 'proyectos',
+                            select: 'nombreProyecto',
+                        },
+                        {
+                            path: 'actividades',
+                            select: 'nombre',
+                        }
+                    ]
+                }
+            });
+
+        res.status(201).send(resultUpdate);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
