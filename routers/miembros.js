@@ -89,7 +89,7 @@ router.get('/miembrosResponsables/:cuentas', async(req, res) => {
 router.get('/:_id', async(req, res) => {
     try {
         const miembro = await Miembros.findById(req.params._id)
-            .populate('perfiles', 'nombre')
+            .populate('perfiles', 'nombre');
         res.send(miembro);
     } catch (error) {
         console.log(error);
@@ -110,8 +110,8 @@ router.post('/', async(req, res) => {
         });
         if (usuario) return res.status(400).send('Usurio ya existe');
 
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
+        const salt = await bcrypt.genSaltSync(10);
+        const hashPassword = await bcrypt.hashSync(req.body.password, salt);
 
         const miembro = new Miembros({
             cuentas: req.body.cuentas,
@@ -127,7 +127,7 @@ router.post('/', async(req, res) => {
         });
         const saveRegistro = await miembro.save();
         const resultSave = await Miembros.findById(saveRegistro.id)
-            .populate('perfiles', 'nombre')
+            .populate('perfiles', 'nombre');
 
         res.status(201).send(resultSave);
     } catch (error) {
