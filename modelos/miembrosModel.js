@@ -1,5 +1,6 @@
 const mongosee = require('mongoose');
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
 moment.locale('es');
 
 const miembroSchema = new mongosee.Schema({
@@ -56,6 +57,20 @@ const miembroSchema = new mongosee.Schema({
         default: true
     }
 });
+
+miembroSchema.methods.generarJWT = function() {
+
+    return jwt.sign({
+        id: this._id,
+        nombre: this.nombre,
+        apellido: this.apellido,
+        usuario: this.usuario,
+        idCuenta: this.cuentas,
+        fecha: this.fechaRegistro,
+        perfil: this.perfiles
+    }, 'password');
+};
+
 const Miembros = mongosee.model('miembros', miembroSchema);
 
 module.exports = Miembros;

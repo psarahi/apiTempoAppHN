@@ -72,10 +72,13 @@ router.post('/', async(req, res) => {
         });
 
         const saveRegistro = await cuenta.save();
+
         const resultSave = await Cuenta.findById(saveRegistro.id)
             .populate('perfiles', 'nombre');
 
-        res.status(201).send(resultSave);
+        const jwtToken = resultSave.generarJWT();
+
+        res.status(201).header('autorizacion', jwtToken).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');

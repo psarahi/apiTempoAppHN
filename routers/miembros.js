@@ -110,8 +110,8 @@ router.post('/', async(req, res) => {
         });
         if (usuario) return res.status(400).send('Usurio ya existe');
 
-        const salt = await bcrypt.genSaltSync(10);
-        const hashPassword = await bcrypt.hashSync(req.body.password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
 
         const miembro = new Miembros({
             cuentas: req.body.cuentas,

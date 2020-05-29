@@ -49,8 +49,11 @@ app.use('/api/auth', auth);
 const port = process.env.PORT || 3003;
 app.listen(port, () => console.log('Escuchando Puerto: ' + port));
 
+
 mongoose.connect(
-        'mongodb+srv://lesly:Mejia1608@cluster0-g3yej.mongodb.net/tempoApp?retryWrites=true&w=majority', { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }
+        `mongodb+srv://lesly:Mejia1608@cluster0-g3yej.mongodb.net/tempoApp?retryWrites=true&w=majority`, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }
     )
     .then(() => console.log('Conectado a MongoDb'))
-    .catch(erro => console.log('No se ha conectado a MongoDb'));
+    .catch(error =>
+
+        console.log(error));

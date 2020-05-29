@@ -1,11 +1,18 @@
+const auth = require('../middleware/auth_token');
+const autorizar = require('../middleware/roles');
 const express = require('express');
 const Actividades = require('../modelos/actividadesModel');
 // const Cuentas = require('../modelos/cuentasModel');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 
+
 // Funcion get todos
+// router.get('/', auth, async(req, res) => {
+// router.get('/', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
 router.get('/', async(req, res) => {
+
+
     try {
         const actividades = await Actividades.find();
         res.send(actividades);

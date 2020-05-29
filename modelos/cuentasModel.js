@@ -1,5 +1,7 @@
 const mongosee = require('mongoose');
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
+
 moment.locale('es');
 
 const cuentaSchema = new mongosee.Schema({
@@ -50,6 +52,19 @@ const cuentaSchema = new mongosee.Schema({
         default: true
     }
 });
+
+cuentaSchema.methods.generarJWT = function() {
+
+    return jwt.sign({
+        id: this._id,
+        nombre: this.nombre,
+        apellido: this.apellido,
+        usuario: this.usuario,
+        idCuenta: this._id,
+        fecha: this.fechaRegistro,
+        perfil: this.perfiles
+    }, 'password');
+};
 
 const Cuentas = mongosee.model('cuentas', cuentaSchema);
 
