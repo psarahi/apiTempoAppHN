@@ -30,7 +30,7 @@ router.post('/', async(req, res) => {
 
             const jwtToken = usuarioMiembro.generarJWT();
 
-            res.status(201).header('Authorization', jwtToken).send(jwtToken);
+            res.status(201).header('Authorization', jwtToken).send('kkkkk');
         }
     } else {
         let passwordValidaCuenta = await bcrypt.compare(req.body.password, usuarioCuenta.password);
@@ -38,7 +38,7 @@ router.post('/', async(req, res) => {
 
         const jwtToken = usuarioCuenta.generarJWT();
 
-        res.status(201).header('Authorization', jwtToken).send(jwtToken);
+        res.status(201).header('Authorization', jwtToken).send('kkkkkk');
     }
 
 });
