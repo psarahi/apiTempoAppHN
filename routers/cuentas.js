@@ -78,7 +78,7 @@ router.post('/', async(req, res) => {
 
         const jwtToken = resultSave.generarJWT();
 
-        res.status(201).header('Autorizacion', jwtToken).send(resultSave);
+        res.status(201).header('Authorization', jwtToken).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');

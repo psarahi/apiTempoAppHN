@@ -8,9 +8,9 @@ const { check, validationResult } = require('express-validator');
 
 
 // Funcion get todos
-// router.get('/', auth, async(req, res) => {
-// router.get('/', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
-router.get('/', async(req, res) => {
+// router.get('/', auth, async(req, res) => {  5e8e222fce7ae6c0d4926b88
+router.get('/', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
+    // router.get('/', async(req, res) => {
 
 
     try {
