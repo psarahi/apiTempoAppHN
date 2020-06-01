@@ -38,7 +38,7 @@ router.post('/', async(req, res) => {
 
         const jwtToken = usuarioCuenta.generarJWT();
 
-        res.status(201).header('Authorization', jwtToken).send('kkkkkk');
+        res.status(201).send(jwtToken);
     }
 
 });
