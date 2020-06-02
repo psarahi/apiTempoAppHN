@@ -5,7 +5,7 @@
       if (!jwtToken) return res.status(401).send('Acceso Denegado. Necesitamos un token valido');
 
       try {
-          const payload = jwt.verify(jwtToken, 'password');
+          const payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
           req.user = payload;
           console.log(req.user);
 

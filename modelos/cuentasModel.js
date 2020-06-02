@@ -63,7 +63,7 @@ cuentaSchema.methods.generarJWT = function() {
         idCuenta: this._id,
         fecha: this.fechaRegistro,
         perfil: this.perfiles
-    }, 'password');
+    }, process.env.KEY_API_JWT);
 };
 
 const Cuentas = mongosee.model('cuentas', cuentaSchema);

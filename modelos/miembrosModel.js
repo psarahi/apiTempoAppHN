@@ -68,7 +68,7 @@ miembroSchema.methods.generarJWT = function() {
         idCuenta: this.cuentas,
         fecha: this.fechaRegistro,
         perfil: this.perfiles
-    }, 'password');
+    }, process.env.KEY_API_JWT);
 };
 
 const Miembros = mongosee.model('miembros', miembroSchema);
