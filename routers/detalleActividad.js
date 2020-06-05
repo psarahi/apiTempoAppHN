@@ -13,19 +13,21 @@ router.get('/', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -44,19 +46,21 @@ router.get('/activo', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -80,19 +84,21 @@ router.get('/cuenta/:cuentas', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -116,19 +122,21 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -147,19 +155,21 @@ router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
             .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -183,19 +193,21 @@ router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
             .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             })
             .sort({ inicio: -1 });
 
@@ -213,19 +225,21 @@ router.get('/:_id', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             });
 
         res.send(detalleActividad);
@@ -253,19 +267,21 @@ router.post('/', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             });
 
         res.status(201).send(resultSave);
@@ -295,19 +311,21 @@ router.put('/:_id', async(req, res) => {
             .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
-                populate: {
-                    path: 'programacionproyecto',
-                    select: 'proyectos actividades',
-                    populate: [{
-                            path: 'proyectos',
-                            select: 'nombreProyecto',
-                        },
-                        {
-                            path: 'actividades',
-                            select: 'nombre',
-                        }
-                    ]
-                }
+                populate: [{
+                        path: 'programacionproyecto',
+                        select: 'proyectos actividades',
+                        populate: [{
+                                path: 'proyectos',
+                                select: 'nombreProyecto',
+                            },
+                            {
+                                path: 'actividades',
+                                select: 'nombre',
+                            }
+                        ]
+                    },
+                    { path: 'miembros', select: 'nombre apellido' }
+                ]
             });
 
         res.status(201).send(resultUpdate);

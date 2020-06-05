@@ -1,6 +1,8 @@
 const mongosee = require('mongoose');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
+// const { obtenerMenu } = require('../modelos-extras/menu');
+
 moment.locale('es');
 
 const miembroSchema = new mongosee.Schema({
@@ -67,10 +69,42 @@ miembroSchema.methods.generarJWT = function() {
         usuario: this.usuario,
         idCuenta: this.cuentas,
         fecha: this.fechaRegistro,
-        perfil: this.perfiles
+        perfil: this.perfiles,
+        token: '',
+        menu: obtenerMenu(this.perfiles)
     }, process.env.KEY_API_JWT);
 };
 
 const Miembros = mongosee.model('miembros', miembroSchema);
+
+function obtenerMenu(perfil) {
+    var menu = [{
+            titulo: 'Administración',
+            icon: 'audit',
+            submenu: [
+                { titulo: 'Cuentas', url: '/cuentas' }
+            ]
+        },
+        {
+            titulo: 'Tablero',
+            icon: 'dashboard',
+            submenu: [
+                { titulo: 'Actividad', url: '/actividadActiva' },
+                { titulo: 'Reporte', url: '/dashboard' },
+            ]
+        },
+        {
+            titulo: 'Mantenimiento',
+            icon: 'tool',
+            submenu: [
+                { titulo: 'Tus Miembros', url: '/equipo' },
+                { titulo: 'Tus Actividades', url: '/actividades' },
+                { titulo: 'TTus Proyectos', url: '/proyecto' }
+            ]
+        }
+    ];
+
+    return menu;
+}
 
 module.exports = Miembros;

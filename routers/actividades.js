@@ -9,10 +9,8 @@ const { check, validationResult } = require('express-validator');
 
 // Funcion get todos
 // router.get('/', auth, async(req, res) => {  5e8e222fce7ae6c0d4926b88
-router.get('/', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e222fce7ae6c0d4926b88', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
+router.get('/', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
     // router.get('/', async(req, res) => {
-
-
     try {
         const actividades = await Actividades.find();
         res.send(actividades);
@@ -36,7 +34,7 @@ router.get('/activo', async(req, res) => {
 });
 
 // Funcion get segun la cuenta TODOS
-router.get('/cuenta/:cuentas', async(req, res) => {
+router.get('/cuenta/:cuentas', [auth, autorizar(['5e8e2246ce7ae6c0d4926b89', '5e8e22d0ce7ae6c0d4926b8a'])], async(req, res) => {
     try {
         const actividad = await Actividades.find({ cuentas: { $eq: req.params.cuentas } });
         res.send(actividad);
@@ -88,7 +86,7 @@ router.post('/', async(req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).send('No se pudo registrar el documento');
+        res.status(404).send('No se pudo registrar la actividad');
     }
 
 });
@@ -106,7 +104,7 @@ router.put('/:_id', async(req, res) => {
         res.status(204).send();
     } catch (error) {
         console.log(error);
-        res.status(404).send('No se encontro ningun documento');
+        res.status(404).send('No se pudo actualizar la actividad');
     }
 
 });
@@ -118,7 +116,7 @@ router.delete('/:_id', async(req, res) => {
         res.status(200).send('Actividad borrada');
     } catch (error) {
         console.log(error);
-        res.status(404).send('No se encontro ningun documento');
+        res.status(404).send('No se eleminar la actividad');
     }
 
 });

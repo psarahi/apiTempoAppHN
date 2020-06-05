@@ -1,7 +1,7 @@
 const mongosee = require('mongoose');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
-
+const { obtenerMenu } = require('../modelos-extras/menu');
 moment.locale('es');
 
 const cuentaSchema = new mongosee.Schema({
@@ -62,7 +62,9 @@ cuentaSchema.methods.generarJWT = function() {
         usuario: this.usuario,
         idCuenta: this._id,
         fecha: this.fechaRegistro,
-        perfil: this.perfiles
+        perfil: this.perfiles,
+        token: '',
+        menu: obtenerMenu(this.perfiles)
     }, process.env.KEY_API_JWT);
 };
 

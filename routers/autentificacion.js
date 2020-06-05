@@ -31,20 +31,20 @@ router.post('/', async(req, res) => {
                 console.log(process.env.KEY_API_JWT);
 
                 const jwtToken = usuarioMiembro.generarJWT();
-                const payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
-                console.log(payload);
+                let payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
+                payload.token = jwtToken;
 
-                res.status(201).header('Authorization', jwtToken).send(jwtToken);
+                res.status(201).header('authorization', jwtToken).send(payload);
             }
         } else {
             let passwordValidaCuenta = await bcrypt.compare(req.body.password, usuarioCuenta.password);
             if (!passwordValidaCuenta) return res.status(400).send('Usuario o contraseña incorrectas');
 
             const jwtToken = usuarioCuenta.generarJWT();
-            const payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
-            console.log(payload);
+            let payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
+            payload.token = jwtToken;
 
-            res.status(201).header('Authorization', jwtToken).send(jwtToken);
+            res.status(201).header('authorization', jwtToken).send(payload);
         }
 
     } catch (error) {

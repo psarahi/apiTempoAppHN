@@ -5,7 +5,7 @@ function autorizar(roles = []) {
 
     return [
         (req, res, next) => {
-            if (!roles.includes(req.user.perfil)) return res.status(403).send('No tienes el Rol Permitido para acceder a este recurso');
+            if (!roles.includes(req.user.perfil)) return res.status(403).send('No tienes el perfil permitido para acceder a este recurso');
             next();
         }
     ]
