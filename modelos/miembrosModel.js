@@ -99,7 +99,7 @@ function obtenerMenu(perfil) {
             submenu: [
                 { titulo: 'Tus Miembros', url: '/equipo' },
                 { titulo: 'Tus Actividades', url: '/actividades' },
-                { titulo: 'TTus Proyectos', url: '/proyecto' }
+                { titulo: 'Tus Proyectos', url: '/proyecto' }
             ]
         }
     ];

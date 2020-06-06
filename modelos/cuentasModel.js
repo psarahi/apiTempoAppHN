@@ -1,7 +1,6 @@
 const mongosee = require('mongoose');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
-const { obtenerMenu } = require('../modelos-extras/menu');
 moment.locale('es');
 
 const cuentaSchema = new mongosee.Schema({
@@ -69,5 +68,35 @@ cuentaSchema.methods.generarJWT = function() {
 };
 
 const Cuentas = mongosee.model('cuentas', cuentaSchema);
+
+function obtenerMenu(perfil) {
+    var menu = [{
+            titulo: 'Administración',
+            icon: 'audit',
+            submenu: [
+                { titulo: 'Cuentas', url: '/cuentas' }
+            ]
+        },
+        {
+            titulo: 'Tablero',
+            icon: 'dashboard',
+            submenu: [
+                { titulo: 'Actividad', url: '/actividadActiva' },
+                { titulo: 'Reporte', url: '/dashboard' },
+            ]
+        },
+        {
+            titulo: 'Mantenimiento',
+            icon: 'tool',
+            submenu: [
+                { titulo: 'Tus Miembros', url: '/equipo' },
+                { titulo: 'Tus Actividades', url: '/actividades' },
+                { titulo: 'Tus Proyectos', url: '/proyecto' }
+            ]
+        }
+    ];
+
+    return menu;
+}
 
 module.exports = Cuentas;
