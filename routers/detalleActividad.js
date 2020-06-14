@@ -2,6 +2,8 @@ const express = require('express');
 const DetalleActividad = require('../modelos/detalleActividadModel');
 // const Cuentas = require('../modelos/cuentasModel');
 const router = express.Router();
+// const { actividadesActivas } = require('../sockets/socket');
+const io = require('../sockets/socket');
 const { check, validationResult } = require('express-validator');
 const moment = require('moment');
 moment.locale('es');
@@ -152,7 +154,6 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
-            .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
             .populate({
                 path: 'programacionequipos',
                 populate: [{
@@ -171,7 +172,9 @@ router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
                     { path: 'miembros', select: 'nombre apellido' }
                 ]
             })
-            .sort({ inicio: -1 });
+            .populate('programacionequipos', { miembros: { $eq: req.params.miembro } }, )
+
+        .sort({ inicio: -1 });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -184,13 +187,14 @@ router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
 // Funcion get segun la cuenta y miembros ACTIVOS
 router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
     try {
+
         const detalleActividad = await DetalleActividad.find({
                 $and: [
                     { cuentas: { $eq: req.params.cuentas } },
                     { estado: true }
                 ]
             })
-            .populate('programacionequipos', null, { miembros: { $eq: req.params.miembro } })
+            .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
                 populate: [{
@@ -206,10 +210,12 @@ router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
                             }
                         ]
                     },
-                    { path: 'miembros', select: 'nombre apellido' }
+                    { path: 'miembros', select: 'nombre apellido', }
                 ]
             })
             .sort({ inicio: -1 });
+
+        // io.emit('actividades-enCurso', detalleActividad);
 
         res.send(detalleActividad);
     } catch (error) {
@@ -284,6 +290,8 @@ router.post('/', async(req, res) => {
                 ]
             });
 
+        io.emit('actividades-enCurso', resultSave);
+
         res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
@@ -347,12 +355,5 @@ router.delete('/:_id', async(req, res) => {
     }
 
 });
-
-// Rutas Joins
-// router.get('/join', async(req, res) => {
-//     const detalleActividades = await DetalleActividad.find()
-//         .populate('cuentas', 'nombre apellido correo');
-//     res.send(detalleActividades);
-// });
 
 module.exports = router;

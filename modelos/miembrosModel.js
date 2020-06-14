@@ -89,7 +89,7 @@ function obtenerMenu(perfil) {
             titulo: 'Tablero',
             icon: 'dashboard',
             submenu: [
-                { titulo: 'Actividad', url: '/actividadActiva' },
+                { titulo: 'Actividad en curso', url: '/actividadActiva' },
                 { titulo: 'Reporte', url: '/dashboard' },
             ]
         },
