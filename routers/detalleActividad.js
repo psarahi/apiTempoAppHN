@@ -156,25 +156,24 @@ router.get('/miembrosDetalle/:cuentas/:miembro', async(req, res) => {
         const detalleActividad = await DetalleActividad.find({ cuentas: { $eq: req.params.cuentas } })
             .populate({
                 path: 'programacionequipos',
+                match: { miembros: { $eq: req.params.miembro } },
                 populate: [{
                         path: 'programacionproyecto',
                         select: 'proyectos actividades',
                         populate: [{
                                 path: 'proyectos',
-                                select: 'nombreProyecto',
+                                select: 'nombreProyecto'
                             },
                             {
                                 path: 'actividades',
-                                select: 'nombre',
+                                select: 'nombre'
                             }
                         ]
                     },
                     { path: 'miembros', select: 'nombre apellido' }
                 ]
             })
-            .populate('programacionequipos', { miembros: { $eq: req.params.miembro } }, )
-
-        .sort({ inicio: -1 });
+            .sort({ inicio: -1 });
 
         res.send(detalleActividad);
     } catch (error) {
@@ -194,23 +193,23 @@ router.get('/miembrosDetalleActivos/:cuentas/:miembro', async(req, res) => {
                     { estado: true }
                 ]
             })
-            .populate('programacionequipos')
             .populate({
                 path: 'programacionequipos',
+                match: { miembros: { $eq: req.params.miembro } },
                 populate: [{
                         path: 'programacionproyecto',
                         select: 'proyectos actividades',
                         populate: [{
                                 path: 'proyectos',
-                                select: 'nombreProyecto',
+                                select: 'nombreProyecto'
                             },
                             {
                                 path: 'actividades',
-                                select: 'nombre',
+                                select: 'nombre'
                             }
                         ]
                     },
-                    { path: 'miembros', select: 'nombre apellido', }
+                    { path: 'miembros', select: 'nombre apellido' }
                 ]
             })
             .sort({ inicio: -1 });
