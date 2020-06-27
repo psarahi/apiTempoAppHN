@@ -8,12 +8,13 @@ io.on('connection', (cliente) => {
     // });
 
     cliente.on('actividades-enCurso', (data) => {
-
-        console.log(data);
-        console.log('paso por el socket');
-
         cliente.emit('actividades-enCurso', data);
     });
+
+    cliente.on('actividades-terminada', (data) => {
+        cliente.emit('actividades-terminada', data);
+    });
+
 });
 
 module.exports = io;
