@@ -28,7 +28,6 @@ router.post('/', async(req, res) => {
             } else {
                 let passwordValidaMiembro = await bcrypt.compare(req.body.password, usuarioMiembro.password);
                 if (!passwordValidaMiembro) return res.status(400).send('Usuario o contraseña incorrectas');
-                console.log(process.env.KEY_API_JWT);
 
                 const jwtToken = usuarioMiembro.generarJWT();
                 let payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);

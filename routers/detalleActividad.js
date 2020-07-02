@@ -322,8 +322,12 @@ router.post("/", async(req, res) => {
             estado: req.body.estado,
         });
 
-        const saveRegistro = await detalleActividad.save();
-        const resultSave = await DetalleActividad.findById(saveRegistro.id)
+        // const saveRegistro = 
+        await detalleActividad.save();
+
+        const Actividades = await DetalleActividad.find({
+                estado: true
+            })
             .populate("programacionequipos")
             .populate({
                 path: "programacionequipos",
@@ -345,11 +349,38 @@ router.post("/", async(req, res) => {
                         select: "nombre apellido"
                     },
                 ],
+            })
+            .sort({
+                inicio: -1
             });
 
-        io.emit("actividades-enCurso", resultSave);
+        // const resultSave = await DetalleActividad.findById(saveRegistro.id)
+        //     .populate("programacionequipos")
+        //     .populate({
+        //         path: "programacionequipos",
+        //         populate: [{
+        //                 path: "programacionproyecto",
+        //                 select: "proyectos actividades",
+        //                 populate: [{
+        //                         path: "proyectos",
+        //                         select: "nombreProyecto",
+        //                     },
+        //                     {
+        //                         path: "actividades",
+        //                         select: "nombre",
+        //                     },
+        //                 ],
+        //             },
+        //             {
+        //                 path: "miembros",
+        //                 select: "nombre apellido"
+        //             },
+        //         ],
+        //     });
 
-        res.status(201).send(resultSave);
+        io.emit("actividades-enCurso", Actividades);
+
+        res.status(201).send(Actividades);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se pudo registrar el documento");
@@ -397,9 +428,40 @@ router.put("/:_id", async(req, res) => {
                 ],
             });
 
-        io.emit("actividades-terminada", resultUpdate);
+        io.emit("actividades-calendario", resultUpdate);
 
-        res.status(201).send(resultUpdate);
+        const Actividades = await DetalleActividad.find({
+                estado: true
+            })
+            .populate("programacionequipos")
+            .populate({
+                path: "programacionequipos",
+                populate: [{
+                        path: "programacionproyecto",
+                        select: "proyectos actividades",
+                        populate: [{
+                                path: "proyectos",
+                                select: "nombreProyecto",
+                            },
+                            {
+                                path: "actividades",
+                                select: "nombre",
+                            },
+                        ],
+                    },
+                    {
+                        path: "miembros",
+                        select: "nombre apellido"
+                    },
+                ],
+            })
+            .sort({
+                inicio: -1
+            });
+
+        io.emit("actividades-terminada", [Actividades, resultUpdate]);
+
+        res.status(201).send(Actividades);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se encontro ningun documento");

@@ -67,6 +67,7 @@ miembroSchema.methods.generarJWT = function() {
         nombre: this.nombre,
         apellido: this.apellido,
         usuario: this.usuario,
+        costoHr: this.costoHr,
         idCuenta: this.cuentas,
         fecha: this.fechaRegistro,
         perfil: this.perfiles,

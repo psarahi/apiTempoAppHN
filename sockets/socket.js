@@ -12,7 +12,12 @@ io.on('connection', (cliente) => {
     });
 
     cliente.on('actividades-terminada', (data) => {
-        cliente.emit('actividades-terminada', data);
+        cliente.emit('actividades-terminada', [data, usuario]);
+    });
+
+
+    cliente.on('actividades-calendario', (data) => {
+        cliente.emit('actividades-calendario', data);
     });
 
 });
