@@ -59,7 +59,6 @@ cuentaSchema.methods.generarJWT = function() {
         nombre: this.nombre,
         apellido: this.apellido,
         usuario: this.usuario,
-        costoHr: 0,
         idCuenta: this._id,
         fecha: this.fechaRegistro,
         perfil: this.perfiles,

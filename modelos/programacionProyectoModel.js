@@ -24,14 +24,6 @@ const programacionProyectoSchema = new mongosee.Schema({
         type: Number,
         default: 0
     },
-    presupuestoProyectado: {
-        type: Number,
-        required: true
-    },
-    presupuestoReal: {
-        type: Number,
-        default: 0
-    },
     estado: {
         type: Boolean,
         default: true

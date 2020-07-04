@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 router.get('/', async(req, res) => {
     try {
         const programacionEquipos = await ProgramacionEquipos.find()
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
         res.send(programacionEquipos);
     } catch (error) {
         console.log(error);
@@ -38,7 +38,7 @@ router.get('/detallado/:miembro', async(req, res) => {
                     }
                 ]
             })
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
         res.send(programacionEquipos);
     } catch (error) {
         console.log(error);
@@ -50,7 +50,7 @@ router.get('/detallado/:miembro', async(req, res) => {
 router.get('/activo', async(req, res) => {
     try {
         const programacionEquipos = await ProgramacionEquipos.find({ estado: true })
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
         res.send(programacionEquipos);
     } catch (error) {
         console.log(error);
@@ -63,7 +63,7 @@ router.get('/activo', async(req, res) => {
 router.get('/ProgramacionProyecto/:programacionproyectos', async(req, res) => {
     try {
         const programacionEquipos = await ProgramacionEquipos.find({ programacionproyectos: { $eq: req.params.programacionproyectos } })
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
         res.send(programacionEquipos);
     } catch (error) {
         console.log(error);
@@ -81,7 +81,7 @@ router.get('/activoProgramacionProyecto/:programacionproyectos', async(req, res)
                     { estado: true }
                 ]
             })
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
 
         res.send(miembros);
     } catch (error) {
@@ -95,7 +95,7 @@ router.get('/activoProgramacionProyecto/:programacionproyectos', async(req, res)
 router.get('/:_id', async(req, res) => {
     try {
         const programacionEquipo = await ProgramacionEquipos.findById(req.params._id)
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
         res.send(programacionEquipo);
     } catch (error) {
         console.log(error);
@@ -114,7 +114,7 @@ router.post('/', async(req, res) => {
         });
         const saveRegistro = await programacionEquipo.save();
         const resultSave = await ProgramacionEquipos.findById(saveRegistro.id)
-            .populate('miembros', 'nombre apellido costoHr');
+            .populate('miembros', 'nombre apellido');
 
         res.status(201).send(resultSave);
     } catch (error) {

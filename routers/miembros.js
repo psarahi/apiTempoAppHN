@@ -120,7 +120,6 @@ router.post('/', async(req, res) => {
             usuario: req.body.usuario,
             password: hashPassword,
             correo: req.body.correo,
-            costoHr: req.body.costoHr,
             perfiles: req.body.perfiles,
             expertis: req.body.expertis,
             estado: req.body.estado
@@ -167,7 +166,6 @@ router.put('/:_id', async(req, res) => {
             usuario: req.body.usuario,
             password: hashPassword,
             correo: req.body.correo,
-            costoHr: req.body.costoHr,
             perfiles: req.body.perfiles,
             expertis: req.body.expertis,
             estado: req.body.estado

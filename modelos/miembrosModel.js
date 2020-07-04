@@ -36,11 +36,6 @@ const miembroSchema = new mongosee.Schema({
         required: true,
         unique: true
     },
-    costoHr: {
-        type: Number,
-        trim: true,
-        required: true,
-    },
     perfiles: {
         type: mongosee.Schema.Types.ObjectId,
         ref: 'perfiles',
@@ -67,7 +62,6 @@ miembroSchema.methods.generarJWT = function() {
         nombre: this.nombre,
         apellido: this.apellido,
         usuario: this.usuario,
-        costoHr: this.costoHr,
         idCuenta: this.cuentas,
         fecha: this.fechaRegistro,
         perfil: this.perfiles,
