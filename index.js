@@ -20,6 +20,7 @@ const programacionEquipos = require('./routers/programacionEquipos');
 const programacionProyectos = require('./routers/programacionProyecto');
 const proyectos = require('./routers/proyecto');
 const detalleActividad = require('./routers/detalleActividad');
+const estado = require('./routers/estados');
 const auth = require('./routers/autentificacion');
 
 app.use(express.json());
@@ -41,6 +42,7 @@ app.use('/api/programacionEquipos', programacionEquipos);
 app.use('/api/programacionProyectos', programacionProyectos);
 app.use('/api/proyectos', proyectos);
 app.use('/api/detalleActividad', detalleActividad);
+app.use('/api/estado', estado);
 app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3003;

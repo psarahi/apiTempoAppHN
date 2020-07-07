@@ -9,18 +9,21 @@ const {
     validationResult
 } = require("express-validator");
 const moment = require("moment");
-const {
-    json
-} = require("../sockets/socket");
+const { json } = require("../sockets/socket");
 moment.locale("es");
 
-// Funcion get todos
+//ESTADOS
+// 5f00e4c38c10d277700bcfa0    En curso
+// 5f00e4e58c10d277700bcfa2    Pausada
+// 5f00e4f88c10d277700bcfa3    Finalizada
+// 5f03ce10fbd6f3df7d7251b2    Tiempo muerto
+
+// Funcion get todos TODOS LAS FINALIZADAS PARA SADMIN
 router.get("/", async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find({
-                estado: false
+                estado: "5f00e4f88c10d277700bcfa3"
             })
-            .populate("programacionequipos")
             .populate({
                 path: "programacionequipos",
                 populate: [{
@@ -39,9 +42,10 @@ router.get("/", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
@@ -53,11 +57,11 @@ router.get("/", async(req, res) => {
     }
 });
 
-// Funcion get documentos activos
+// Funcion get documentos activos  TODOS ACTIVOS PARA SADMIN
 router.get("/activo", async(req, res) => {
     try {
         const detalleActividades = await DetalleActividad.find({
-                estado: true
+                estado: { $in: ['5f00e4e58c10d277700bcfa2', '5f00e4c38c10d277700bcfa0'] }
             })
             .populate("programacionequipos")
             .populate({
@@ -78,9 +82,10 @@ router.get("/activo", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
@@ -92,7 +97,7 @@ router.get("/activo", async(req, res) => {
     }
 });
 
-// Funcion get segun la cuenta TODOS
+// Funcion get segun la cuenta TODOS ACTIVIDADES FINALIZADAS POR CUENTA
 router.get("/cuenta/:cuentas", async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({
@@ -101,8 +106,8 @@ router.get("/cuenta/:cuentas", async(req, res) => {
                         $eq: req.params.cuentas
                     }
                 }, {
-                    estado: false
-                }],
+                    estado: "5f00e4f88c10d277700bcfa3"
+                }]
             })
             .populate("programacionequipos")
             .populate({
@@ -123,9 +128,10 @@ router.get("/cuenta/:cuentas", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
@@ -146,8 +152,8 @@ router.get("/activoCuenta/:cuentas", async(req, res) => {
                         $eq: req.params.cuentas
                     }
                 }, {
-                    estado: true
-                }],
+                    estado: { $in: ['5f00e4e58c10d277700bcfa2', '5f00e4c38c10d277700bcfa0'] }
+                }]
             })
             .populate("programacionequipos")
             .populate({
@@ -168,9 +174,10 @@ router.get("/activoCuenta/:cuentas", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
@@ -186,9 +193,13 @@ router.get("/activoCuenta/:cuentas", async(req, res) => {
 router.get("/miembrosDetalle/:cuentas/:miembro", async(req, res) => {
     try {
         const detalleActividad = await DetalleActividad.find({
-                cuentas: {
-                    $eq: req.params.cuentas
-                },
+                $and: [{
+                    cuentas: {
+                        $eq: req.params.cuentas
+                    }
+                }, {
+                    estado: { $in: ['5f00e4e58c10d277700bcfa2', '5f00e4f88c10d277700bcfa3'] }
+                }]
             })
             .populate({
                 path: "programacionequipos",
@@ -213,9 +224,10 @@ router.get("/miembrosDetalle/:cuentas/:miembro", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
@@ -238,8 +250,8 @@ router.get("/miembrosDetalleActivos/:cuentas/:miembro", async(req, res) => {
                         $eq: req.params.cuentas
                     }
                 }, {
-                    estado: true
-                }],
+                    estado: { $in: ['5f00e4c38c10d277700bcfa0', '5f03ce10fbd6f3df7d7251b2', '5f00e4e58c10d277700bcfa2'] }
+                }]
             }).populate({
                 path: "programacionequipos",
                 // match: { miembros: { $eq: req.params.miembro } }
@@ -259,16 +271,22 @@ router.get("/miembrosDetalleActivos/:cuentas/:miembro", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
 
-        res.send(detalleActividad.filter(
-            (x) => x.programacionequipos.miembros._id == (req.params.miembro)
-        ));
+        res.send([
+            detalleActividad.filter(
+                x => x.programacionequipos.miembros._id == req.params.miembro && (x.estado._id == "5f00e4c38c10d277700bcfa0" || x.estado._id == "5f00e4e58c10d277700bcfa2")
+            ),
+            detalleActividad.filter(
+                x => x.programacionequipos.miembros._id == req.params.miembro && x.estado._id == "5f03ce10fbd6f3df7d7251b2"
+            )
+        ]);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se encontro ningun documento");
@@ -298,9 +316,10 @@ router.get("/:_id", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
-            });
+                    }
+                ]
+            })
+            .populate("estado");
 
         res.send(detalleActividad);
     } catch (error) {
@@ -318,17 +337,48 @@ router.post("/", async(req, res) => {
             descripcion: req.body.descripcion,
             inicio: req.body.inicio,
             fin: req.body.fin,
-            costo: req.body.costo,
             estado: req.body.estado,
         });
 
-        // const saveRegistro = 
-        await detalleActividad.save();
+        const saveRegistro = await detalleActividad.save();
 
         const Actividades = await DetalleActividad.find({
-                estado: true
+                $and: [{
+                    cuentas: {
+                        $eq: req.body.cuentas
+                    }
+                }, {
+                    estado: { $in: ['5f00e4c38c10d277700bcfa0', '5f00e4e58c10d277700bcfa2'] }
+                }]
             })
             .populate("programacionequipos")
+            .populate({
+                path: "programacionequipos",
+                populate: [{
+                        path: "programacionproyecto",
+                        select: "proyectos actividades",
+                        populate: [{
+                                path: "proyectos",
+                                select: "nombreProyecto",
+                            },
+                            {
+                                path: "actividades",
+                                select: "nombre",
+                            },
+                        ],
+                    },
+                    {
+                        path: "miembros",
+                        select: "nombre apellido"
+                    }
+                ]
+            })
+            .populate("estado")
+            .sort({
+                inicio: -1
+            });
+
+        const resultSave = await DetalleActividad.findById(saveRegistro.id)
             .populate({
                 path: "programacionequipos",
                 populate: [{
@@ -350,37 +400,11 @@ router.post("/", async(req, res) => {
                     },
                 ],
             })
-            .sort({
-                inicio: -1
-            });
+            .populate("estado");
 
-        // const resultSave = await DetalleActividad.findById(saveRegistro.id)
-        //     .populate("programacionequipos")
-        //     .populate({
-        //         path: "programacionequipos",
-        //         populate: [{
-        //                 path: "programacionproyecto",
-        //                 select: "proyectos actividades",
-        //                 populate: [{
-        //                         path: "proyectos",
-        //                         select: "nombreProyecto",
-        //                     },
-        //                     {
-        //                         path: "actividades",
-        //                         select: "nombre",
-        //                     },
-        //                 ],
-        //             },
-        //             {
-        //                 path: "miembros",
-        //                 select: "nombre apellido"
-        //             },
-        //         ],
-        //     });
+        io.emit("actividades-enCurso", [Actividades, req.body.cuentas]);
 
-        io.emit("actividades-enCurso", Actividades);
-
-        res.status(201).send(Actividades);
+        res.status(201).send(resultSave);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se pudo registrar el documento");
@@ -397,7 +421,6 @@ router.put("/:_id", async(req, res) => {
                 descripcion: req.body.descripcion,
                 inicio: req.body.inicio,
                 fin: req.body.fin,
-                costo: req.body.costo,
                 estado: req.body.estado,
             }, {
                 new: true,
@@ -405,7 +428,6 @@ router.put("/:_id", async(req, res) => {
         );
 
         const resultUpdate = await DetalleActividad.findById(detalleActividad._id)
-            .populate("programacionequipos")
             .populate({
                 path: "programacionequipos",
                 populate: [{
@@ -424,14 +446,23 @@ router.put("/:_id", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
-            });
+                    }
+                ]
+            })
+            .populate("estado");
 
-        io.emit("actividades-calendario", resultUpdate);
+        if (req.body.estado == '5f00e4f88c10d277700bcfa3') {
+            io.emit("actividades-calendario", resultUpdate);
+        }
 
         const Actividades = await DetalleActividad.find({
-                estado: true
+                $and: [{
+                    cuentas: {
+                        $eq: req.body.cuentas
+                    }
+                }, {
+                    estado: { $in: ['5f00e4e58c10d277700bcfa2', '5f00e4c38c10d277700bcfa0'] }
+                }]
             })
             .populate("programacionequipos")
             .populate({
@@ -452,16 +483,17 @@ router.put("/:_id", async(req, res) => {
                     {
                         path: "miembros",
                         select: "nombre apellido"
-                    },
-                ],
+                    }
+                ]
             })
+            .populate("estado")
             .sort({
                 inicio: -1
             });
 
-        io.emit("actividades-terminada", [Actividades, resultUpdate]);
+        io.emit("actividades-actualizada", [Actividades, resultUpdate, req.body.cuentas, req.body.estado]);
 
-        res.status(201).send(Actividades);
+        res.status(201).send(resultUpdate);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se encontro ningun documento");

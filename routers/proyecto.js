@@ -7,7 +7,10 @@ const { check, validationResult } = require('express-validator');
 router.get('/', async(req, res) => {
     try {
         const proyectos = await Proyecto.find()
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
         res.send(proyectos);
     } catch (error) {
         console.log(error);
@@ -20,7 +23,10 @@ router.get('/', async(req, res) => {
 router.get('/activo', async(req, res) => {
     try {
         const proyectos = await Proyecto.find({ estado: true })
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
         res.send(proyectos);
     } catch (error) {
         console.log(error);
@@ -33,7 +39,10 @@ router.get('/activo', async(req, res) => {
 router.get('/cuenta/:cuentas', async(req, res) => {
     try {
         const proyectos = await Proyecto.find({ cuentas: { $eq: req.params.cuentas } })
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
         res.send(proyectos);
     } catch (error) {
         console.log(error);
@@ -51,7 +60,10 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
                     { estado: true }
                 ]
             })
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
 
         res.send(proyectos);
     } catch (error) {
@@ -65,7 +77,10 @@ router.get('/activoCuenta/:cuentas', async(req, res) => {
 router.get('/:_id', async(req, res) => {
     try {
         const proyecto = await Proyecto.findById(req.params._id)
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
 
         res.send(proyecto);
     } catch (error) {
@@ -89,7 +104,10 @@ router.post('/', async(req, res) => {
         });
         const saveRegistro = await proyecto.save();
         const resultSave = await Proyecto.findById(saveRegistro.id)
-            .populate('miembros', 'empresa nombre apellido expertis');
+            .populate('miembros', 'empresa nombre apellido expertis')
+            .sort({
+                fechaRegistro: -1
+            });
 
         res.status(201).send(resultSave);
     } catch (error) {

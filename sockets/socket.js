@@ -8,11 +8,11 @@ io.on('connection', (cliente) => {
     // });
 
     cliente.on('actividades-enCurso', (data) => {
-        cliente.emit('actividades-enCurso', data);
+        cliente.emit('actividades-enCurso', [data, cuenta]);
     });
 
-    cliente.on('actividades-terminada', (data) => {
-        cliente.emit('actividades-terminada', [data, usuario]);
+    cliente.on('actividades-actualizada', (data) => {
+        cliente.emit('actividades-actualizada', [data, usuario, cuenta, estado]);
     });
 
 

@@ -26,22 +26,25 @@ const detalleActividadSchema = new mongosee.Schema({
         type: Date,
         default: moment().format("YYYY-MM-DD HH:mm:ss")
     },
-    costo: {
-        type: Number,
-        required: true,
-    },
     fecha: {
         type: Date,
         default: moment().format("YYYY-MM-DD HH:mm:ss")
     },
     estado: {
-        type: Boolean,
-        default: true
+        type: mongosee.Schema.Types.ObjectId,
+        ref: 'estado',
+        required: true
     }
 });
 const DetalleActividad = mongosee.model('detalleactividad', detalleActividadSchema);
 
 module.exports = DetalleActividad;
+
+// 5e8e2a8a8541e7ecc0b4cece act
+// 5e8d7c79e8e365e5ec73a7d0 pro
+// 5e8e2c6e8541e7ecc0b4cedb progPro
+// 5e8e2e518541e7ecc0b4cedf proe
+// 5e8e26574da7bd19843cd34c miembro
 
 // _id
 // :
