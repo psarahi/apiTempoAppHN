@@ -3,9 +3,15 @@ const { io } = require('../index');
 io.on('connection', (cliente) => {
     console.log('Usuario conectado');
 
-    // cliente.on('disconnect', () => {
-    //     console.log('Usuario desconectado');
-    // });
+    cliente.on('disconnect', () => {
+        console.log('Usuario desconectado');
+    });
+
+    cliente.on('usuarios-conectados', (data) => {
+        // console.log(data);
+
+        cliente.emit('usuarios-conectados', data);
+    });
 
     cliente.on('actividades-enCurso', (data) => {
         cliente.emit('actividades-enCurso', [data, cuenta]);

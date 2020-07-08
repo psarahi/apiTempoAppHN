@@ -72,6 +72,14 @@ miembroSchema.methods.generarJWT = function() {
 
 const Miembros = mongosee.model('miembros', miembroSchema);
 
+// miembroSchema.methods.usuariosConectados = function(lista) {
+
+//     let listaUsuarios = [];
+
+//     listaUsuarios.push(lista);
+
+// };
+
 function obtenerMenu(perfil) {
     var menu = [{
             titulo: 'Administración',

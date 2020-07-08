@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const Miembros = require('../modelos/miembrosModel');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const io = require("../sockets/socket");
 
 // Funcion get todos
 router.get('/', async(req, res) => {
@@ -38,6 +39,28 @@ router.get('/cuenta/:cuentas', async(req, res) => {
         const miembros = await Miembros.find({ cuentas: { $eq: req.params.cuentas } })
             .populate('perfiles', 'nombre')
             .sort({ nombre: 1, apellido: 1 });
+        res.send(miembros);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+
+    }
+});
+
+router.get('/usuariosConectados/:cuentas', async(req, res) => {
+    try {
+        const miembros = await Miembros.find({
+                    $and: [
+                        { cuentas: { $eq: req.params.cuentas } },
+                        { estado: true }
+                    ]
+                },
+                '_id cuentas nombre apellido'
+            )
+            .sort({ nombre: 1, apellido: 1 });
+
+        // io.emit('usuario', miembros);
+
         res.send(miembros);
     } catch (error) {
         console.log(error);

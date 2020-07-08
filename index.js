@@ -9,6 +9,7 @@ const app = express();
 let server = http.createServer(app);
 
 module.exports.io = socketIO(server);
+
 require('./sockets/socket');
 
 const inicio = require('./routers/inicio');
@@ -22,6 +23,7 @@ const proyectos = require('./routers/proyecto');
 const detalleActividad = require('./routers/detalleActividad');
 const estado = require('./routers/estados');
 const auth = require('./routers/autentificacion');
+const sesiones = require('./routers/sesiones');
 
 app.use(express.json());
 
@@ -43,6 +45,7 @@ app.use('/api/programacionProyectos', programacionProyectos);
 app.use('/api/proyectos', proyectos);
 app.use('/api/detalleActividad', detalleActividad);
 app.use('/api/estado', estado);
+app.use('/api/sesiones', sesiones);
 app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3003;
