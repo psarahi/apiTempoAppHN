@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const Miembro = require('../modelos/miembrosModel');
 const Cuenta = require('../modelos/cuentasModel');
 const jwt = require('jsonwebtoken');
+const Sesiones = require('../modelos/sesionesModel');
+const moment = require('moment');
+moment.locale('es');
 
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
@@ -33,7 +36,19 @@ router.post('/', async(req, res) => {
                 let payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
                 payload.token = jwtToken;
 
-                res.status(201).header('authorization', jwtToken).send(payload);
+                const sesion = await Sesiones.find({
+                    $and: [{
+                        miembros: {
+                            $eq: payload.id
+                        }
+                    }, {
+                        fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
+                    }, {
+                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+                    }]
+                });
+
+                res.status(201).header('authorization', jwtToken).send([payload, sesion]);
             }
         } else {
             let passwordValidaCuenta = await bcrypt.compare(req.body.password, usuarioCuenta.password);

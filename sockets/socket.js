@@ -8,7 +8,6 @@ io.on('connection', (cliente) => {
     });
 
     cliente.on('usuarios-conectados', (data) => {
-        // console.log(data);
 
         cliente.emit('usuarios-conectados', data);
     });

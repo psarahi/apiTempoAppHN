@@ -60,10 +60,10 @@ router.get('/activo', async(req, res) => {
 });
 
 // Funcion get segun la Programacion Proyecto TODOS
-router.get('/ProgramacionProyecto/:programacionproyectos', async(req, res) => {
+router.get('/ProgramacionProyecto/:programacionproyecto', async(req, res) => {
     try {
-        const programacionEquipos = await ProgramacionEquipos.find({ programacionproyectos: { $eq: req.params.programacionproyectos } })
-            .populate('miembros', 'nombre apellido');
+        const programacionEquipos = await ProgramacionEquipos.find({ programacionproyecto: { $eq: req.params.programacionproyecto } })
+            .populate('miembros');
         res.send(programacionEquipos);
     } catch (error) {
         console.log(error);
@@ -77,11 +77,13 @@ router.get('/activoProgramacionProyecto/:programacionproyectos', async(req, res)
     try {
         const miembros = await Miembros.find({
                 $and: [
-                    { programacionproyectos: { $eq: req.params.programacionproyectos } },
+                    { programacionproyecto: { $eq: req.params.programacionproyectos } },
                     { estado: true }
                 ]
             })
-            .populate('miembros', 'nombre apellido');
+            .populate('miembros');
+
+        console.log(miembros);
 
         res.send(miembros);
     } catch (error) {
@@ -112,9 +114,11 @@ router.post('/', async(req, res) => {
             miembros: req.body.miembros,
             estado: req.body.estado
         });
-        const saveRegistro = await programacionEquipo.save();
-        const resultSave = await ProgramacionEquipos.findById(saveRegistro.id)
-            .populate('miembros', 'nombre apellido');
+        const saveRegistro = await programacionEquipo.save()
+        const resultSave = await ProgramacionEquipos.find({ programacionproyecto: { $eq: req.body.programacionproyecto } })
+            .populate('miembros');
+        console.log(resultSave);
+
 
         res.status(201).send(resultSave);
     } catch (error) {

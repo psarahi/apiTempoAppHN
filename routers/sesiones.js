@@ -45,9 +45,9 @@ router.get('/sesionesCuentaDia/:cuenta', async(req, res) => {
                             $eq: req.params.cuenta
                         }
                     }, {
-                        fechaLogin: { $lte: moment().format("YYYY-MM-DD HH:mm:ss") }
+                        fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
                     }, {
-                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD HH:mm:ss") }
+                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
                     },
                     { estado: true }
                 ]
@@ -58,6 +58,32 @@ router.get('/sesionesCuentaDia/:cuenta', async(req, res) => {
         //  io.emit('usuarios-conectados', sesiones);
 
         res.send(sesiones);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+
+    }
+});
+
+// Funcion get sesion Dia por miembro
+router.get('/sesionMiembroDia/:miembro', async(req, res) => {
+    try {
+        const sesion = await Sesiones.find({
+            $and: [{
+                miembros: {
+                    $eq: req.params.miembro
+                }
+            }, {
+                fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
+            }, {
+                fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+            }]
+        });
+        // .populate('miembros', 'nombre apellido usuario')
+
+        //  io.emit('usuarios-conectados', sesiones);
+
+        res.send(sesion);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
@@ -79,28 +105,29 @@ router.post('/', async(req, res) => {
         });
 
         const saveRegistro = await sesion.save();
-        const resultSave = await Sesiones.findById(saveRegistro.id)
-            .populate('miembros', 'nombre apellido usuario');
+        const resultSave = await Sesiones.findById(saveRegistro.id);
+        // .populate('miembros', 'nombre apellido usuario');
 
         const sesiones = await Sesiones.find({
                 $and: [{
                         cuentas: {
-                            $eq: req.body.cuenta
+                            $eq: req.body.cuentas
                         }
                     }, {
-                        fechaLogin: { $lte: moment().format("YYYY-MM-DD HH:mm:ss") }
+                        fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
                     }, {
-                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD HH:mm:ss") }
+                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
                     },
                     { estado: true }
                 ]
             })
             // .populate('miembros', 'nombre apellido usuario')
-            .sort({ fechaLogin: -1 });
+            // .sort({ fechaLogin: -1 });
 
         io.emit('usuarios-conectados', sesiones);
 
         res.status(201).send(resultSave);
+
     } catch (error) {
         console.log(error);
         res.status(404).send('No se pudo registrar el documento');
@@ -110,7 +137,7 @@ router.post('/', async(req, res) => {
 router.put('/:_id', async(req, res) => {
     try {
 
-        const sesion = await Miembros.findByIdAndUpdate(req.params._id, {
+        const sesion = await Sesiones.findByIdAndUpdate(req.params._id, {
             cuentas: req.body.cuentas,
             miembros: req.body.miembros,
             fechaLogin: req.body.fechaLogin,
@@ -123,24 +150,25 @@ router.put('/:_id', async(req, res) => {
         });
 
         const sesiones = await Sesiones.find({
-                $and: [{
-                        cuentas: {
-                            $eq: req.body.cuenta
-                        }
-                    }, {
-                        fechaLogin: { $lte: moment().format("YYYY-MM-DD HH:mm:ss") }
-                    }, {
-                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD HH:mm:ss") }
-                    },
-                    { estado: true }
-                ]
-            })
-            // .populate('miembros', 'nombre apellido usuario')
-            .sort({ fechaLogin: -1 });
+            $and: [{
+                    cuentas: {
+                        $eq: req.body.cuentas
+                    }
+                },
+                {
+                    fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
+                }, {
+                    fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+                },
+                { estado: true }
+            ]
+        });
+        // .populate('miembros', 'nombre apellido usuario')
+        //.sort({ fechaLogin: -1 });
 
         io.emit('usuarios-conectados', sesiones);
 
-        res.status(204).send(sesion);
+        res.status(201).send(sesion);
     } catch (error) {
         console.log(error);
         res.status(404).send('No se encontro ningun documento');
