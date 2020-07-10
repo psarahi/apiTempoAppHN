@@ -137,6 +137,8 @@ router.post('/', async(req, res) => {
 router.put('/:_id', async(req, res) => {
     try {
 
+        console.log(req.params._id);
+
         const sesion = await Sesiones.findByIdAndUpdate(req.params._id, {
             cuentas: req.body.cuentas,
             miembros: req.body.miembros,

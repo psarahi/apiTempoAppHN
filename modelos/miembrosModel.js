@@ -94,6 +94,7 @@ function obtenerMenu(perfil) {
             submenu: [
                 { titulo: 'Actividad en curso', url: '/actividadActiva' },
                 { titulo: 'Reporte', url: '/dashboard' },
+                { titulo: 'Asiganciones', url: '/asinacion' },
             ]
         },
         {

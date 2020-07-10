@@ -83,6 +83,7 @@ function obtenerMenu(perfil) {
             submenu: [
                 { titulo: 'Actividad', url: '/actividadActiva' },
                 { titulo: 'Reporte', url: '/dashboard' },
+                { titulo: 'Asiganciones', url: '/asinacion' },
             ]
         },
         {
