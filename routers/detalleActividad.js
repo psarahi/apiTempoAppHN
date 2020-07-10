@@ -284,8 +284,7 @@ router.get("/miembrosDetalleActivos/:cuentas/:miembro", async(req, res) => {
                 x => x.programacionequipos.miembros._id == req.params.miembro && (x.estado._id == "5f00e4c38c10d277700bcfa0" || x.estado._id == "5f00e4e58c10d277700bcfa2")
             ),
             detalleActividad.filter(
-                x => x.programacionequipos.miembros._id == req.params.miembro && x.estado._id == "5f03ce10fbd6f3df7d7251b2"
-            )
+                x => (x.programacionequipos.miembros._id == req.params.miembro && x.estado._id == "5f03ce10fbd6f3df7d7251b2") && (moment(x.fin).format('YYYY-MM-DD HH:mm:ss') == moment(x.inicio).format('YYYY-MM-DD HH:mm:ss')))
         ]);
     } catch (error) {
         console.log(error);

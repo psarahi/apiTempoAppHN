@@ -16,6 +16,43 @@ router.get('/', async(req, res) => {
 });
 
 // Funcion detallado de programacion
+router.get('/detalladoActivo/:miembro', async(req, res) => {
+    try {
+        const programacionEquipos = await ProgramacionEquipos.find({
+                $and: [{
+                    miembros: { $eq: req.params.miembro }
+                }, {
+                    estado: true
+                }]
+            })
+            .populate({
+                path: 'programacionproyecto',
+                populate: [{
+                        path: 'proyectos',
+                        select: 'nombreProyecto',
+                        model: 'proyectos'
+                    },
+                    {
+                        path: 'actividades',
+                        select: 'nombre',
+                        model: 'actividades'
+                    },
+                    {
+                        path: 'cuentas',
+                        select: 'empresa',
+                        model: 'cuentas'
+                    }
+                ]
+            })
+            .populate('miembros', 'nombre apellido');
+        res.send(programacionEquipos);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send('No se encontro ningun documento');
+    }
+});
+
+// Funcion detallado de programacion
 router.get('/detallado/:miembro', async(req, res) => {
     try {
         const programacionEquipos = await ProgramacionEquipos.find({ miembros: { $eq: req.params.miembro } })
