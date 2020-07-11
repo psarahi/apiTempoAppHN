@@ -22,7 +22,7 @@ io.on('connection', (cliente) => {
 
 
     cliente.on('actividades-calendario', (data) => {
-        cliente.emit('actividades-calendario', data);
+        cliente.emit('actividades-calendario', [dataFinalizada, detalleTiempoMuerto]);
     });
 
 });

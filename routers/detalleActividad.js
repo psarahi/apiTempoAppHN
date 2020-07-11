@@ -1,5 +1,9 @@
 const express = require("express");
 const DetalleActividad = require("../modelos/detalleActividadModel");
+const ProgramacionEquipos = require('../modelos/programacionEquiposModel');
+const Proyecto = require('../modelos/proyectoModel');
+const ProgramacionProyecto = require('../modelos/programacionProyectoModel');
+
 // const Cuentas = require('../modelos/cuentasModel');
 const router = express.Router();
 // const { actividadesActivas } = require('../sockets/socket');
@@ -28,7 +32,7 @@ router.get("/", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -68,7 +72,7 @@ router.get("/activo", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -106,7 +110,7 @@ router.get("/cuenta/:cuentas", async(req, res) => {
                         $eq: req.params.cuentas
                     }
                 }, {
-                    estado: "5f00e4f88c10d277700bcfa3"
+                    estado: { $in: ['5f03ce10fbd6f3df7d7251b2', '5f00e4f88c10d277700bcfa3'] }
                 }]
             })
             .populate("programacionequipos")
@@ -114,7 +118,7 @@ router.get("/cuenta/:cuentas", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -136,7 +140,10 @@ router.get("/cuenta/:cuentas", async(req, res) => {
                 inicio: -1
             });
 
-        res.send(detalleActividad);
+        res.send([
+            detalleActividad.filter(x => x.estado._id == '5f00e4f88c10d277700bcfa3'),
+            detalleActividad.filter(x => x.estado._id == '5f03ce10fbd6f3df7d7251b2')
+        ]);
     } catch (error) {
         console.log(error);
         res.status(404).send("No se encontro ningun documento");
@@ -160,7 +167,7 @@ router.get("/activoCuenta/:cuentas", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -210,7 +217,7 @@ router.get("/miembrosDetalle/:cuentas/:miembro", async(req, res) => {
                 },
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -257,7 +264,7 @@ router.get("/miembrosDetalleActivos/:cuentas/:miembro", async(req, res) => {
                 // match: { miembros: { $eq: req.params.miembro } }
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -301,7 +308,7 @@ router.get("/:_id", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -335,6 +342,7 @@ router.post("/", async(req, res) => {
             programacionequipos: req.body.programacionequipos,
             descripcion: req.body.descripcion,
             inicio: req.body.inicio,
+            fecha: req.body.fecha,
             fin: req.body.fin,
             estado: req.body.estado,
         });
@@ -355,7 +363,7 @@ router.post("/", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -382,7 +390,7 @@ router.post("/", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -410,6 +418,42 @@ router.post("/", async(req, res) => {
     }
 });
 
+
+// Funcion get segun la cuenta y miembros ACTIVOS
+router.get("/programacionEquipo/:_id", async(req, res) => {
+    try {
+
+        const resultUpdate = await DetalleActividad.findById(req.params._id)
+            .populate({
+                path: "programacionequipos",
+                populate: [{
+                        path: "programacionproyecto",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
+                        populate: [{
+                                path: "proyectos"
+                            },
+                            {
+                                path: "actividades",
+                                select: "nombre",
+                            },
+                        ],
+                    },
+                    {
+                        path: "miembros",
+                        select: "nombre apellido"
+                    }
+                ]
+            })
+            .populate("estado");
+
+        res.send(resultUpdate);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("No se encontro ningun documento");
+    }
+});
+
+
 // Funcion PUT
 router.put("/:_id", async(req, res) => {
     try {
@@ -419,6 +463,7 @@ router.put("/:_id", async(req, res) => {
                 programacionequipos: req.body.programacionequipos,
                 descripcion: req.body.descripcion,
                 inicio: req.body.inicio,
+                fecha: req.body.fecha,
                 fin: req.body.fin,
                 estado: req.body.estado,
             }, {
@@ -431,7 +476,7 @@ router.put("/:_id", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",
@@ -450,8 +495,100 @@ router.put("/:_id", async(req, res) => {
             })
             .populate("estado");
 
+
         if (req.body.estado == '5f00e4f88c10d277700bcfa3') {
-            io.emit("actividades-calendario", resultUpdate);
+
+            const detalleTiempo = await DetalleActividad.find({
+                    $and: [{
+                        programacionequipos: {
+                            $eq: req.body.programacionequipos
+                        }
+                    }, {
+                        estado: { $in: ['5f03ce10fbd6f3df7d7251b2', '5f00e4f88c10d277700bcfa3'] }
+                    }]
+                })
+                .populate({
+                    path: "programacionequipos",
+                    populate: [{
+                            path: "programacionproyecto",
+                            select: "proyectos actividades tiempoProyectado tiempoReal",
+                            populate: [{
+                                    path: "proyectos"
+                                },
+                                {
+                                    path: "actividades",
+                                    select: "nombre",
+                                },
+                            ],
+                        },
+                        {
+                            path: "miembros",
+                            select: "nombre apellido"
+                        }
+                    ]
+                })
+                .populate("estado")
+                .sort({
+                    inicio: -1
+                });
+
+            io.emit("actividades-calendario", [
+                detalleTiempo.filter(x => x.estado._id == '5f00e4f88c10d277700bcfa3'),
+                detalleTiempo.filter(x => x.estado._id == '5f03ce10fbd6f3df7d7251b2')
+            ]);
+
+            const dataActualizar = await detalleTiempo.filter(x => x.estado._id == '5f00e4f88c10d277700bcfa3');
+            let inicio = await moment([
+                moment(dataActualizar[0].inicio).get('year'),
+                moment(dataActualizar[0].inicio).get('month'),
+                moment(dataActualizar[0].inicio).get('day'),
+                moment(dataActualizar[0].inicio).get('hour'),
+                moment(dataActualizar[0].inicio).get('minute'),
+                moment(dataActualizar[0].inicio).get('second')
+            ]);
+            let fin = await moment([
+                moment(dataActualizar[0].fin).get('year'),
+                moment(dataActualizar[0].fin).get('month'),
+                moment(dataActualizar[0].fin).get('day'),
+                moment(dataActualizar[0].fin).get('hour'),
+                moment(dataActualizar[0].fin).get('minute'),
+                moment(dataActualizar[0].fin).get('second')
+            ]);
+
+            let difMin = Math.round(((fin.diff(inicio, 'minutes')) / 60) * 100) / 100;
+
+            // Actualizar Programacion de equipos, pasa a desactivado esta finalizada
+            await ProgramacionEquipos.findByIdAndUpdate(dataActualizar[0].programacionequipos._id, {
+                programacionproyecto: dataActualizar[0].programacionequipos.programacionproyecto._id,
+                miembros: dataActualizar[0].programacionequipos.miembros._id,
+                estado: false
+            }, {
+                new: true
+            });
+
+            // // Actualizar Programacion de proyecto, sumarle esas horas a tiempo real y colocar finalizado
+            await ProgramacionProyecto.findByIdAndUpdate(dataActualizar[0].programacionequipos.programacionproyecto._id, {
+                cuentas: dataActualizar[0].cuentas,
+                proyectos: dataActualizar[0].programacionequipos.programacionproyecto.proyectos._id,
+                actividades: dataActualizar[0].programacionequipos.programacionproyecto.actividades._id,
+                tiempoProyectado: dataActualizar[0].programacionequipos.programacionproyecto.tiempoProyectado,
+                tiempoReal: difMin,
+                estado: false
+            }, {
+                new: true
+            });
+
+            // // Actualizar proyecto, sumarle la horas que se hicieron en el momento
+            await Proyecto.findByIdAndUpdate(dataActualizar[0].programacionequipos.programacionproyecto.proyectos._id, {
+                cuentas: dataActualizar[0].cuentas,
+                nombreProyecto: dataActualizar[0].programacionequipos.programacionproyecto.proyectos.nombreProyecto,
+                miembros: dataActualizar[0].programacionequipos.programacionproyecto.proyectos.miembros,
+                tiempoProyectadoPro: dataActualizar[0].programacionequipos.programacionproyecto.proyectos.tiempoProyectadoPro,
+                tiempoRealPro: dataActualizar[0].programacionequipos.programacionproyecto.proyectos.tiempoRealPro + difMin,
+                estado: dataActualizar[0].programacionequipos.programacionproyecto.proyectos.estado
+            }, {
+                new: true
+            });
         }
 
         const Actividades = await DetalleActividad.find({
@@ -468,7 +605,7 @@ router.put("/:_id", async(req, res) => {
                 path: "programacionequipos",
                 populate: [{
                         path: "programacionproyecto",
-                        select: "proyectos actividades",
+                        select: "proyectos actividades tiempoProyectado tiempoReal",
                         populate: [{
                                 path: "proyectos",
                                 select: "nombreProyecto",

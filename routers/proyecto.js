@@ -126,7 +126,7 @@ router.put('/:_id', async(req, res) => {
             miembros: req.body.miembros,
             tiempoProyectadoPro: req.body.tiempoProyectadoPro,
             tiempoRealPro: req.body.tiempoRealPro,
-            estado: req.body.estad
+            estado: req.body.estado
         }, {
             new: true
         });
