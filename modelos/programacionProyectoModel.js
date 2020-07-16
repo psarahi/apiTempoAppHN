@@ -24,6 +24,10 @@ const programacionProyectoSchema = new mongosee.Schema({
         type: Number,
         default: 0
     },
+    tiempoMuerto: {
+        type: Number,
+        default: 0.00
+    },
     estado: {
         type: Boolean,
         default: true

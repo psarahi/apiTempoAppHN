@@ -42,12 +42,14 @@ router.post('/', async(req, res) => {
                             $eq: payload.id
                         }
                     }, {
-                        fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
+                        fechaLogin: { $eq: moment().format("YYYY-MM-DD") }
                     }, {
-                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+                        fechaLogin: { $eq: moment().format("YYYY-MM-DD") }
                     }]
                 });
-
+                console.log(moment().add(1, 'day').format("YYYY-MM-DD"));
+                console.log(moment().subtract(1, 'day').format("YYYY-MM-DD"));
+                console.log(sesion);
                 res.status(201).header('authorization', jwtToken).send([payload, sesion]);
             }
         } else {
@@ -63,7 +65,7 @@ router.post('/', async(req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(404).send(error);
+        res.status(501).send('El servidor no puede hacer la conexción');
 
     }
 

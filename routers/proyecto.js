@@ -100,6 +100,7 @@ router.post('/', async(req, res) => {
             miembros: req.body.miembros,
             tiempoProyectadoPro: req.body.tiempoProyectadoPro,
             tiempoRealPro: req.body.tiempoRealPro,
+            tiempoMuerto: req.body.tiempoMuerto,
             estado: req.body.estado
         });
         const saveRegistro = await proyecto.save();
@@ -126,6 +127,7 @@ router.put('/:_id', async(req, res) => {
             miembros: req.body.miembros,
             tiempoProyectadoPro: req.body.tiempoProyectadoPro,
             tiempoRealPro: req.body.tiempoRealPro,
+            tiempoMuerto: req.body.tiempoMuerto,
             estado: req.body.estado
         }, {
             new: true

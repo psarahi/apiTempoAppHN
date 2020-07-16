@@ -25,6 +25,10 @@ const proyectoSchema = new mongosee.Schema({
         type: Number,
         default: 0
     },
+    tiempoMuerto: {
+        type: Number,
+        default: 0
+    },
     fechaRegistro: {
         type: Date,
         default: moment().format("YYYY-MM-DD HH:mm:ss")
