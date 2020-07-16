@@ -44,7 +44,7 @@ router.post('/', async(req, res) => {
                     }, {
                         fechaLogin: { $eq: moment().format("YYYY-MM-DD") }
                     }, {
-                        fechaLogin: { $eq: moment().format("YYYY-MM-DD") }
+                        fechaLogout: { $eq: moment().format("YYYY-MM-DD") }
                     }]
                 });
                 console.log(moment().add(1, 'day').format("YYYY-MM-DD"));
