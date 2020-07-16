@@ -354,9 +354,9 @@ router.post("/", async(req, res) => {
             cuentas: req.body.cuentas,
             programacionequipos: req.body.programacionequipos,
             descripcion: req.body.descripcion,
-            inicio: req.body.inicio.toISOString(),
-            fecha: req.body.fecha.toISOString(),
-            fin: req.body.fin.toISOString(),
+            inicio: new Date(req.body.inicio).toISOString(),
+            fecha: new Date(req.body.fecha).toISOString(),
+            fin: new Date(req.body.fin).toISOString(),
             estado: req.body.estado,
         });
 
@@ -486,9 +486,9 @@ router.put("/:_id", async(req, res) => {
                 cuentas: req.body.cuentas,
                 programacionequipos: req.body.programacionequipos,
                 descripcion: req.body.descripcion,
-                inicio: req.body.inicio.toISOString(),
-                fecha: req.body.fecha.toISOString(),
-                fin: req.body.fin.toISOString(),
+                inicio: new Date(req.body.inicio).toISOString(),
+                fecha: new Date(req.body.fecha).toISOString(),
+                fin: new Date(req.body.fin).toISOString(),
                 estado: req.body.estado,
             }, {
                 new: true,
