@@ -63,6 +63,98 @@ router.get("/", async(req, res) => {
     }
 });
 
+//// Reporte diario
+/////// Reporte 
+router.get("/reporteDiario/:cuenta", async(req, res) => {
+    try {
+        //  const detalleActividades = await DetalleActividad.aggregate([{ $group: { _id: "$programacionequipos", "repetidos": { $sum: 1 } } }])
+        const detalleActividades = await DetalleActividad.find({
+                $and: [{
+                    cuentas: {
+                        $eq: req.params.cuenta
+                    }
+                }, {
+                    inicio: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD"), $lt: moment().add(1, 'day').format("YYYY-MM-DD") }
+                }]
+            })
+            .populate({
+                path: "programacionequipos",
+                populate: [{
+                        path: "programacionproyecto",
+                        select: "proyectos actividades tiempoProyectado tiempoReal tiempoMuerto",
+                        populate: [{
+                                path: "proyectos",
+                                select: "nombreProyecto tiempoRealPro tiempoMuerto tiempoProyectadoPro",
+                            },
+                            {
+                                path: "actividades",
+                                select: "nombre",
+                            },
+                        ],
+                    },
+                    {
+                        path: "miembros",
+                        select: "nombre apellido"
+                    }
+                ]
+            })
+            .populate("estado")
+            .sort({
+                inicio: -1
+            });
+        res.send([
+            detalleActividades.filter(x => x.estado.id == '5f00e4f88c10d277700bcfa3'),
+            detalleActividades.filter(x => x.estado.id == '5f03ce10fbd6f3df7d7251b2')
+        ]);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("No se encontro ningun documento");
+    }
+});
+
+router.get("/reporteDiarioMiembro/:miembro", async(req, res) => {
+    try {
+        //  const detalleActividades = await DetalleActividad.aggregate([{ $group: { _id: "$programacionequipos", "repetidos": { $sum: 1 } } }])
+        const detalleActividades = await DetalleActividad.find({
+                inicio: { $gt: moment().subtract(1, 'day').subtract(6, 'hour').format("YYYY-MM-DD"), $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
+            })
+            .populate({
+                path: "programacionequipos",
+                populate: [{
+                        path: "programacionproyecto",
+                        select: "proyectos actividades tiempoProyectado tiempoReal tiempoMuerto",
+                        populate: [{
+                                path: "proyectos",
+                                select: "nombreProyecto tiempoRealPro tiempoMuerto tiempoProyectadoPro",
+                            },
+                            {
+                                path: "actividades",
+                                select: "nombre",
+                            },
+                        ],
+                    },
+                    {
+                        path: "miembros",
+                        select: "nombre apellido"
+                    }
+                ]
+            })
+            .populate("estado")
+            .sort({
+                inicio: -1
+            });
+
+        console.log();
+        res.send([
+            detalleActividades.filter((x) => x.programacionequipos.miembros._id == (req.params.miembro) && x.estado._id == '5f00e4f88c10d277700bcfa3'),
+            detalleActividades.filter((x) => x.programacionequipos.miembros._id == (req.params.miembro) && x.estado._id == '5f03ce10fbd6f3df7d7251b2')
+        ]);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("No se encontro ningun documento");
+    }
+});
+
 // Funcion get documentos activos  TODOS ACTIVOS PARA SADMIN
 router.get("/activo", async(req, res) => {
     try {
@@ -711,5 +803,9 @@ router.delete("/:_id", async(req, res) => {
         res.status(404).send("No se encontro ningun documento");
     }
 });
+
+
+
+
 
 module.exports = router;

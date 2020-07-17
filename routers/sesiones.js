@@ -74,10 +74,11 @@ router.get('/sesionMiembroDia/:miembro', async(req, res) => {
                     $eq: req.params.miembro
                 }
             }, {
-                fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
-            }, {
-                fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
-            }]
+                fechaLogin: {
+                    $gt: moment().subtract(1, 'day').subtract(6, 'hour').format("YYYY-MM-DD"),
+                    $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD")
+                }
+            }, ]
         });
         // .populate('miembros', 'nombre apellido usuario')
 
@@ -109,20 +110,20 @@ router.post('/', async(req, res) => {
         // .populate('miembros', 'nombre apellido usuario');
 
         const sesiones = await Sesiones.find({
-                $and: [{
-                        cuentas: {
-                            $eq: req.body.cuentas
-                        }
-                    }, {
-                        fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
-                    }, {
-                        fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
-                    },
-                    { estado: true }
-                ]
-            })
-            // .populate('miembros', 'nombre apellido usuario')
-            // .sort({ fechaLogin: -1 });
+            $and: [{
+                    cuentas: {
+                        $eq: req.body.cuentas
+                    }
+                }, {
+                    fechaLogin: { $lt: moment().add(1, 'day').format("YYYY-MM-DD") }
+                }, {
+                    fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+                },
+                { estado: true }
+            ]
+        });
+        // .populate('miembros', 'nombre apellido usuario')
+        // .sort({ fechaLogin: -1 });
 
         io.emit('usuarios-conectados', sesiones);
 
@@ -158,10 +159,12 @@ router.put('/:_id', async(req, res) => {
                     }
                 },
                 {
-                    fechaLogin: { $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD") }
-                }, {
-                    fechaLogin: { $gt: moment().subtract(1, 'day').format("YYYY-MM-DD") }
+                    fechaLogin: {
+                        $gt: moment().subtract(1, 'day').subtract(6, 'hour').format("YYYY-MM-DD"),
+                        $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD")
+                    }
                 },
+
                 { estado: true }
             ]
         });

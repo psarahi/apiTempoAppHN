@@ -42,14 +42,13 @@ router.post('/', async(req, res) => {
                             $eq: payload.id
                         }
                     }, {
-                        fechaLogin: { $eq: moment().format("YYYY-MM-DD") }
-                    }, {
-                        fechaLogout: { $eq: moment().format("YYYY-MM-DD") }
+                        fechaLogin: {
+                            $gt: moment().subtract(1, 'day').subtract(6, 'hour').format("YYYY-MM-DD"),
+                            $lt: moment().add(1, 'day').add(6, 'hour').format("YYYY-MM-DD")
+                        }
                     }]
+
                 });
-                console.log(moment().add(1, 'day').format("YYYY-MM-DD"));
-                console.log(moment().subtract(1, 'day').format("YYYY-MM-DD"));
-                console.log(sesion);
                 res.status(201).header('authorization', jwtToken).send([payload, sesion]);
             }
         } else {

@@ -70,32 +70,60 @@ cuentaSchema.methods.generarJWT = function() {
 const Cuentas = mongosee.model('cuentas', cuentaSchema);
 
 function obtenerMenu(perfil) {
-    var menu = [{
-            titulo: 'Administración',
-            icon: 'audit',
-            submenu: [
-                { titulo: 'Cuentas', url: '/cuentas' }
-            ]
-        },
-        {
-            titulo: 'Tablero',
-            icon: 'dashboard',
-            submenu: [
-                { titulo: 'Actividad', url: '/actividadActiva' },
-                { titulo: 'Reporte', url: '/dashboard' },
-                { titulo: 'Asiganciones', url: '/asinacion' },
-            ]
-        },
-        {
-            titulo: 'Mantenimiento',
-            icon: 'tool',
-            submenu: [
-                { titulo: 'Tus Miembros', url: '/equipo' },
-                { titulo: 'Tus Actividades', url: '/actividades' },
-                { titulo: 'Tus Proyectos', url: '/proyecto' }
-            ]
-        }
-    ];
+    console.log(perfil);
+    var menu;
+    if (perfil != '5e8e222fce7ae6c0d4926b88') {
+        menu = [{
+                titulo: 'Tablero',
+                icon: 'dashboard',
+                submenu: [
+                    { titulo: 'Actividad', url: '/actividadActiva' },
+                    { titulo: 'Calendario', url: '/dashboard' },
+                    { titulo: 'Asiganciones', url: '/asinacion' },
+                ]
+            },
+            {
+                titulo: 'Reportes',
+                icon: 'bar-chart',
+                submenu: [
+                    { titulo: 'Diario', url: '/reporteDiarioAdmin' },
+                    // { titulo: 'Tus Actividades', url: '/actividades' },
+                    // { titulo: 'Tus Proyectos', url: '/proyecto' }
+                ]
+            },
+            {
+                titulo: 'Mantenimiento',
+                icon: 'tool',
+                submenu: [
+                    { titulo: 'Tus Miembros', url: '/equipo' },
+                    { titulo: 'Tus Actividades', url: '/actividades' },
+                    { titulo: 'Tus Proyectos', url: '/proyecto' }
+                ]
+            }
+        ];
+    } else {
+
+        menu = [{
+                titulo: 'Tablero',
+                icon: 'dashboard',
+                submenu: [
+                    { titulo: 'Actividad', url: '/actividadActiva' },
+                    { titulo: 'Calendario', url: '/dashboard' },
+                    { titulo: 'Asiganciones', url: '/asinacion' },
+                ]
+            },
+            {
+                titulo: 'Reportes',
+                icon: 'bar-chart',
+                submenu: [
+                    { titulo: 'Diario', url: '/reporteDiario' },
+                    // { titulo: 'Tus Actividades', url: '/actividades' },
+                    // { titulo: 'Tus Proyectos', url: '/proyecto' }
+                ]
+            },
+        ];
+    }
+
 
     return menu;
 }
