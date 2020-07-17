@@ -51,7 +51,7 @@ router.get('/sesionesCuentaDia/:cuenta', async(req, res) => {
                     },
                     { estado: true }
                 ]
-            }, 'miembros')
+            }, 'miembros fechaLogin')
             // .populate('miembros', 'nombre apellido usuario')
             .sort({ fechaLogin: -1 });
 

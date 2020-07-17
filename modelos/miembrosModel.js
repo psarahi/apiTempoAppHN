@@ -90,7 +90,7 @@ function obtenerMenu(perfil) {
                 icon: 'bar-chart',
                 submenu: [
                     { titulo: 'Diario', url: '/reporteDiarioAdmin' },
-                    // { titulo: 'Tus Actividades', url: '/actividades' },
+                    { titulo: 'Detalle por miembros', url: '/reportePorMiembro' },
                     // { titulo: 'Tus Proyectos', url: '/proyecto' }
                 ]
             },

@@ -49,7 +49,7 @@ router.post('/', async(req, res) => {
                     }]
 
                 });
-                res.status(201).header('authorization', jwtToken).send([payload, sesion]);
+                res.status(201).header('authorization', jwtToken).send([payload, sesion, 'login']);
             }
         } else {
             let passwordValidaCuenta = await bcrypt.compare(req.body.password, usuarioCuenta.password);
@@ -59,7 +59,7 @@ router.post('/', async(req, res) => {
             let payload = jwt.verify(jwtToken, process.env.KEY_API_JWT);
             payload.token = jwtToken;
 
-            res.status(201).header('authorization', jwtToken).send(payload);
+            res.status(201).header('authorization', jwtToken).send([payload, [], 'admin']);
         }
 
     } catch (error) {
